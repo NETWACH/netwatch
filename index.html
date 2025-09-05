@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>📰 NetWatch | Home</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0b0f14;
+      --card: #111827;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --brand: #60a5fa;
+      --accent: #22d3ee;
+      --warning: #fbbf24;
+      --ok: #34d399;
+      --danger: #f87171;
+      --ring: #1f2937;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      background: radial-gradient(1200px 800px at 20% -10%, #0f172a 0%, var(--bg) 50%),
+                  radial-gradient(1000px 700px at 120% 10%, #0a1220 0%, var(--bg) 40%);
+      color: var(--text);
+    }
+    a { color: var(--brand); text-decoration: none; }
+    a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
+
+    #info-scroll {
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(17,24,39,0.85);
+      backdrop-filter: blur(6px);
+      border-bottom: 1px solid var(--ring);
+      width: 100%;
+      overflow: hidden;
+    }
+    #info-scroll .track { display: flex; gap: 4rem; padding: .5rem 1rem; white-space: nowrap; animation: marquee 30s linear infinite; }
+    @keyframes marquee { to { transform: translateX(-50%); } }
+
+    .header { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 18px 20px; border-bottom: 1px solid var(--ring); }
+    .logo-text { font-weight: 800; letter-spacing: .5px; font-size: clamp(20px, 3vw, 28px); }
+    .logo-badge { padding: 2px 8px; border-radius: 999px; background: linear-gradient(90deg, var(--brand), var(--accent)); color: #000; font-weight: 700; margin-left: 8px; }
+
+    #clock-container { padding: 10px 20px; color: var(--muted); font-variant-numeric: tabular-nums; border-bottom: 1px dashed var(--ring); }
+
+    .tracker { display: grid; grid-template-columns: 64px 1fr; gap: 12px; align-items: center; margin: 16px 20px; padding: 12px; border: 1px solid var(--ring); border-radius: 14px; background: linear-gradient(180deg, rgba(17,24,39,.6), rgba(15,23,42,.3)); }
+    .tracker img { width: 64px; height: 64px; object-fit: contain; border-radius: 50%; background: #0b1220; border: 1px solid var(--ring); }
+    .tracker strong { color: #fff; }
+
+    nav { display: flex; flex-wrap: wrap; gap: 10px; padding: 0 20px 12px; border-bottom: 1px solid var(--ring); }
+    nav a { padding: 10px 14px; border: 1px solid var(--ring); border-radius: 999px; color: var(--text); background: #0f172a; }
+    nav a:hover { border-color: var(--brand); }
+
+    main { max-width: 1100px; margin: 0 auto; padding: 20px; }
+    .main-title { font-size: clamp(28px, 4vw, 40px); font-weight: 800; letter-spacing: .3px; }
+    .subtitle { color: var(--muted); margin-top: 4px; }
+
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 16px; }
+    .card { background: var(--card); border: 1px solid var(--ring); border-radius: 16px; padding: 16px; box-shadow: 0 10px 30px rgba(0,0,0,.25); }
+    .card h3 { display: flex; align-items: center; gap: 8px; margin: 0 0 8px; font-size: 16px; letter-spacing: .2px; }
+    .pill { font-size: 12px; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--ring); color: var(--muted); }
+
+    footer { margin: 40px 0 20px; text-align: center; color: var(--muted); }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+  </style>
+</head>
+<body>
+  <div id="info-scroll" aria-live="polite">
+    <div class="track" id="ticker">
+      <div>Welcome to 📰 NetWatch</div>
+      <div>Last update: <span id="last-update">—</span></div>
+      <div>Tracking: Medicaid • Housing • SNAP/EBT • Social Security</div>
+      <div>Source-friendly • Fact-forward • People-first</div>
+      <div aria-hidden="true">Welcome to 📰 NetWatch</div>
+      <div aria-hidden="true">Last update: <span id="last-update-dup">—</span></div>
+      <div aria-hidden="true">Tracking: Medicaid • Housing • SNAP/EBT • Social Security</div>
+      <div aria-hidden="true">Source-friendly • Fact-forward • People-first</div>
+    </div>
+  </div>
+
+  <header class="header">
+    <div class="logo-text">📰 NETWATCH <span class="logo-badge">v1</span></div>
+  </header>
+
+  <div id="clock-container" aria-live="polite">
+    <span id="clock-time">—:— —</span>
+    <span class="pill" id="clock-tz">—</span>
+  </div>
+
+  <section class="tracker">
+    <img loading="lazy" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Seal_of_the_President_of_the_United_States.svg/240px-Seal_of_the_President_of_the_United_States.svg.png" alt="Seal of the President of the United States" />
+    <div>
+      <div><strong>President:</strong> Donald J. Trump (47th)</div>
+      <div><strong>Vice President:</strong> JD Vance</div>
+      <div><strong>Term:</strong> January 20, 2025 – January 20, 2029</div>
+    </div>
+  </section>
+
+  <nav>
+    <a href="#home">Home</a>
+    <a href="#news">News & Testimonies</a>
+    <a href="#medicaid">Medicaid</a>
+    <a href="#social-security">Social Security</a>
+  </nav>
+
+  <main id="home">
+    <h1 class="main-title">📰 NetWatch</h1>
+    <p class="subtitle">Real-time trackers and plain‑language explainers for programs that keep people alive.</p>
+
+    <div class="cards">
+      <article class="card" id="card-medicaid">
+        <h3>⚠️ Medicaid <span class="pill">status</span></h3>
+        <p>Watching eligibility redeterminations, coverage gaps, and state policy changes. Updates roll in as rules change or lawsuits land.</p>
+      </article>
+
+      <article class="card" id="card-housing">
+        <h3>⚠️ Housing <span class="pill">monitor</span></h3>
+        <p>Eviction trends, shelter capacity, HUD rule changes, and local encampment policies. Data and case studies highlighted here.</p>
+      </article>
+
+      <article class="card" id="card-snap">
+        <h3>⚠️ SNAP / EBT <span class="pill">benefits</span></h3>
+        <p>Allotment updates, emergency waivers, and state issuance calendars. Quick breakdowns in plain language.</p>
+      </article>
+
+      <article class="card" id="card-ssa">
+        <h3>🧓 Social Security <span class="pill">notices</span></h3>
+        <p>COLA trackers, SSI/SSDI notices, overpayment policy, and appeal timelines. Links to official guidance when it drops.</p>
+      </article>
+    </div>
+  </main>
+
+  <footer>
+    © <span id="year"></span> NetWatch • Atlanta, GA 30303
+  </footer>
+
+  <script>
+    function setLastUpdate() {
+      try {
+        const now = new Date();
+        const fmt = new Intl.DateTimeFormat('en-US', { timeZone: 'America/Denver', year: 'numeric', month: 'numeric', day: 'numeric' });
+        const dateStr = fmt.format(now);
+        document.getElementById('last-update').textContent = dateStr;
+        document.getElementById('last-update-dup').textContent = dateStr;
+      } catch (e) {}
+    }
+
+    function startClock() {
+      const timeEl = document.getElementById('clock-time');
+      const tzEl = document.getElementById('clock-tz');
+      const tz = 'America/Denver';
+      tzEl.textContent = tz.replace('America/', '').replace('_', ' ');
+      const fmt = new Intl.DateTimeFormat('en-US', { timeZone: tz, hour: 'numeric', minute: '2-digit', second: '2-digit', hour12: true, weekday: 'short', month: 'short', day: '2-digit' });
+      const tick = () => { timeEl.textContent = fmt.format(new Date()); };
+      tick();
+      setInterval(tick, 1000);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('year').textContent = new Date().getFullYear();
+      setLastUpdate();
+      startClock();
+    });
+  </script>
+</body>
+</html>
