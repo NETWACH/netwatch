@@ -7,12 +7,14 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --card: #111827;
+      --panel-bg: #0a0e13;
+      --card: #0d1117;
+      --field: #161b22;
       --text: #e5e7eb;
       --muted: #9ca3af;
       --brand: #60a5fa;
       --accent: #22d3ee;
-      --ring: #1f2937;
+      --ring: #30363d;
       --seal-size: 80px;
     }
     * { box-sizing: border-box; }
@@ -23,43 +25,37 @@
       background-size: cover;
       color: var(--text);
     }
-    a { color: var(--brand); text-decoration: none; }
-    a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
 
-    #info-bar { position: sticky; top: 0; z-index: 50; background: rgba(17,24,39,0.9); backdrop-filter: blur(6px); border-bottom: 1px solid var(--ring); width: 100%; overflow: hidden; }
+    #info-bar { position: sticky; top: 0; z-index: 50; background: var(--panel-bg); border-bottom: 3px solid var(--ring); width: 100%; overflow: hidden; }
     #info-bar .marquee { display: flex; gap: 4rem; padding: 12px 16px; font-size: clamp(16px, 2.2vw, 22px); font-weight: 700; white-space: nowrap; animation: marquee 25s linear infinite; }
     @keyframes marquee { to { transform: translateX(-50%); } }
 
-    .header { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 18px 20px; border-bottom: 1px solid var(--ring); background: rgba(0,0,0,0.5); }
-    .logo-text { font-weight: 800; letter-spacing: .5px; font-size: clamp(22px, 3vw, 30px); }
-    .logo-badge { padding: 2px 8px; border-radius: 999px; background: linear-gradient(90deg, var(--brand), var(--accent)); color: #000; font-weight: 700; margin-left: 8px; }
+    .header { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 18px 20px; border-bottom: 3px solid var(--ring); background: var(--panel-bg); }
+    .logo-text { font-weight: 800; letter-spacing: .5px; font-size: clamp(22px, 3vw, 30px); color: var(--brand); }
 
-    #clock-container { padding: 10px 20px; color: var(--muted); font-variant-numeric: tabular-nums; border-bottom: 1px dashed var(--ring); background: rgba(0,0,0,0.5); }
+    #clock-container { padding: 10px 20px; color: var(--muted); font-variant-numeric: tabular-nums; border-bottom: 3px solid var(--ring); background: var(--panel-bg); }
 
-    .tracker { display: grid; grid-template-columns: var(--seal-size) 1fr; gap: 12px; align-items: center; margin: 16px 20px; padding: 12px; border: 1px solid var(--ring); border-radius: 14px; background: rgba(0,0,0,0.5); }
-    .tracker img { width: var(--seal-size); height: var(--seal-size); object-fit: contain; border-radius: 50%; background: #0b1220; border: 1px solid var(--ring); }
+    .panel { margin: 20px; padding: 20px; border: 3px solid var(--ring); border-radius: 6px; background: var(--panel-bg); box-shadow: inset 0 0 10px #000; }
+
+    .tracker { display: grid; grid-template-columns: var(--seal-size) 1fr; gap: 12px; align-items: center; padding: 12px; border: 2px solid var(--ring); border-radius: 6px; background: var(--field); }
+    .tracker img { width: var(--seal-size); height: var(--seal-size); object-fit: contain; border-radius: 50%; background: var(--panel-bg); border: 1px solid var(--ring); }
     @keyframes spinOnce { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
     .spin { animation: spinOnce 2.2s linear 1; }
 
-    nav { display: flex; flex-wrap: wrap; gap: 10px; padding: 0 20px 12px; border-bottom: 1px solid var(--ring); background: rgba(0,0,0,0.5); }
-    nav a { padding: 10px 14px; border: 1px solid var(--ring); border-radius: 999px; color: var(--text); background: #0f172a; }
-    nav a:hover { border-color: var(--brand); }
+    nav { display: flex; flex-wrap: wrap; gap: 10px; padding: 12px 20px; border-bottom: 3px solid var(--ring); background: var(--panel-bg); }
+    nav a { padding: 10px 14px; border: 2px solid var(--ring); border-radius: 4px; color: var(--text); background: var(--field); font-weight: 600; text-transform: uppercase; letter-spacing: .05em; }
+    nav a:hover { border-color: var(--brand); color: var(--brand); background: #111; }
 
-    main { max-width: 1100px; margin: 0 auto; padding: 20px; background: rgba(0,0,0,0.5); border-radius: 16px; }
-    .main-title { font-size: clamp(28px, 4vw, 40px); font-weight: 800; letter-spacing: .3px; }
-    .subtitle { color: var(--muted); margin-top: 4px; }
+    main { max-width: 1100px; margin: 20px auto; padding: 20px; border: 3px solid var(--ring); border-radius: 8px; background: var(--panel-bg); box-shadow: inset 0 0 12px #000; }
+    .main-title { font-size: clamp(28px, 4vw, 40px); font-weight: 800; letter-spacing: .3px; color: var(--brand); text-transform: uppercase; text-align: center; }
+    .subtitle { color: var(--muted); margin-top: 4px; text-align: center; }
 
-    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 16px; }
-    .card { background: var(--card); border: 1px solid var(--ring); border-radius: 16px; padding: 0; box-shadow: 0 10px 30px rgba(0,0,0,.5); overflow: hidden; animation: blinkBox 2s infinite; }
-    @keyframes blinkBox { 0%, 100% { box-shadow: 0 0 10px #fbbf24; } 50% { box-shadow: 0 0 30px #f87171; } }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-top: 16px; }
+    .card { border: 2px solid var(--ring); border-radius: 6px; overflow: hidden; background: var(--field); box-shadow: 0 2px 6px rgba(0,0,0,.6); }
+    .card h3 { margin: 0; padding: 14px; font-size: 16px; letter-spacing: .3px; background: var(--panel-bg); color: var(--brand); font-weight: 700; border-bottom: 2px solid var(--ring); text-transform: uppercase; text-align: center; }
+    .card iframe { width: 100%; height: 220px; border: none; background: var(--panel-bg); }
 
-    .card h3 { display: flex; align-items: center; gap: 8px; margin: 0; padding: 12px; font-size: 16px; letter-spacing: .2px; background: rgba(17,24,39,0.8); }
-    .card h3 .blink { animation: blinkText 1s infinite; }
-    @keyframes blinkText { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
-
-    .card iframe { width: 100%; height: 200px; border: none; }
-
-    footer { margin: 40px 0 20px; text-align: center; color: #9ca3af; background: rgba(0,0,0,0.5); padding: 10px; border-radius: 12px; }
+    footer { margin: 40px 0 20px; text-align: center; color: var(--muted); background: var(--panel-bg); padding: 10px; border-top: 3px solid var(--ring); font-size: 14px; letter-spacing: .05em; text-transform: uppercase; }
   </style>
 </head>
 <body>
@@ -73,7 +69,7 @@
   </div>
 
   <header class="header">
-    <div class="logo-text">📰 NETWATCH <span class="logo-badge">v1</span></div>
+    <div class="logo-text">📰 NETWATCH</div>
   </header>
 
   <div id="clock-container" aria-live="polite">
@@ -81,14 +77,16 @@
     <span class="pill" id="clock-tz">—</span>
   </div>
 
-  <section class="tracker" id="exec-tracker">
-    <img id="seal" loading="lazy" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Seal_of_the_President_of_the_United_States.svg/240px-Seal_of_the_President_of_the_United_States.svg.png" alt="Seal of the President of the United States" />
-    <div>
-      <div><strong>President:</strong> Donald J. Trump (47th)</div>
-      <div><strong>Vice President:</strong> JD Vance</div>
-      <div><strong>Term:</strong> January 20, 2025 – January 20, 2029</div>
-    </div>
-  </section>
+  <div class="panel">
+    <section class="tracker" id="exec-tracker">
+      <img id="seal" loading="lazy" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Seal_of_the_President_of_the_United_States.svg/240px-Seal_of_the_President_of_the_United_States.svg.png" alt="Seal of the President of the United States" />
+      <div>
+        <div><strong>President:</strong> Donald J. Trump (47th)</div>
+        <div><strong>Vice President:</strong> JD Vance</div>
+        <div><strong>Term:</strong> January 20, 2025 – January 20, 2029</div>
+      </div>
+    </section>
+  </div>
 
   <nav>
     <a href="#home">Home</a>
@@ -99,26 +97,26 @@
 
   <main id="home">
     <h1 class="main-title">📰 NetWatch</h1>
-    <p class="subtitle"></p>
+    <p class="subtitle">Official Monitoring Portal</p>
 
     <div class="cards">
       <article class="card" id="card-medicaid">
-        <h3><span class="blink">⚠️</span> Medicaid <span class="pill">status</span></h3>
+        <h3>Medicaid</h3>
         <iframe src="/blog/medicaid.html"></iframe>
       </article>
 
       <article class="card" id="card-housing">
-        <h3><span class="blink">⚠️</span> Housing <span class="pill">monitor</span></h3>
+        <h3>Housing</h3>
         <iframe src="/blog/housing.html"></iframe>
       </article>
 
       <article class="card" id="card-snap">
-        <h3><span class="blink">⚠️</span> SNAP / EBT <span class="pill">benefits</span></h3>
+        <h3>SNAP / EBT</h3>
         <iframe src="/blog/snap.html"></iframe>
       </article>
 
       <article class="card" id="card-ssa">
-        <h3><span class="blink">🧓</span> Social Security <span class="pill">notices</span></h3>
+        <h3>Social Security</h3>
         <iframe src="/blog/social-security.html"></iframe>
       </article>
     </div>
