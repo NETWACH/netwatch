@@ -19,7 +19,8 @@
 
     /* Header */
     header{background:var(--panel); border-bottom:3px solid var(--ring); padding:12px 20px; display:flex; align-items:center; justify-content:space-between}
-    .brand{font-weight:800; letter-spacing:.02em; font-size:20px; color:var(--brand)}
+    .brand{display:flex; align-items:center; gap:10px; font-weight:800; letter-spacing:.02em; font-size:20px; color:var(--brand)}
+    .brand img{height:36px; width:auto}
     .clock{font-variant-numeric:tabular-nums; color:var(--muted)}
 
     /* Top menu with dropdowns */
@@ -37,7 +38,7 @@
     .title{font-size:28px; font-weight:800; text-transform:uppercase; text-align:center; color:var(--brand); margin:0 0 4px}
     .subtitle{color:var(--muted); text-align:center; margin:0 0 18px}
 
-    /* Executive tracker (single, top; no extras below) */
+    /* Executive tracker */
     .exec{display:grid; grid-template-columns:96px 1fr; gap:16px; align-items:center; padding:14px; border:2px solid var(--ring); border-radius:8px; background:var(--surface)}
     .exec img{width:96px; height:96px; border-radius:50%; background:#0b1220; border:1px solid var(--ring)}
     .exec h2{margin:0 0 6px; font-size:14px; color:var(--muted); letter-spacing:.08em; text-transform:uppercase}
@@ -58,7 +59,7 @@
 </head>
 <body>
   <header>
-    <div class="brand">📰 NetWatch</div>
+    <div class="brand"><img src="logo.png" alt="NetWatch logo"/> NetWatch</div>
     <div class="clock" id="clock">—:— —</div>
   </header>
 
@@ -157,4 +158,3 @@
   </script>
 </body>
 </html>
-
