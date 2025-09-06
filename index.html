@@ -17,6 +17,15 @@
     body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial; color:var(--text);
          background:var(--page-bg) no-repeat center/cover fixed}
 
+    /* Gov banner link */
+    .gov-banner { background:#f8fafc; color:#111827; border-bottom:1px solid #e5e7eb; font-size:14px; padding:.6rem 1rem; }
+    .gov-banner .flag { margin-right:.25rem; }
+    .gov-banner a { color:#0a58ca; text-decoration:underline; cursor:pointer; margin-left:.35rem; }
+    .gov-dropdown { display:none; background:#fff; color:#111; border-top:1px solid #e5e7eb; padding:1rem; font-size:14px; }
+    .gov-dropdown.open { display:block; }
+    .gov-dropdown strong { display:block; margin-bottom:.2rem; }
+    .gov-dropdown .desc { color:#374151; display:block; margin-bottom:.8rem; }
+
     /* Header */
     header{background:var(--panel); border-bottom:3px solid var(--ring); padding:12px 20px; display:flex; align-items:center; justify-content:space-between}
     .brand{display:flex; align-items:center; gap:10px; font-weight:800; letter-spacing:.02em; font-size:20px; color:var(--brand)}
@@ -58,6 +67,21 @@
   </style>
 </head>
 <body>
+  <div class="gov-banner">
+    <span class="flag">🇺🇸</span> Not an official website of the United States government
+    <a id="gov-toggle">Here's how you know</a>
+    <div class="gov-dropdown" id="gov-info">
+      <div>
+        <strong>Websites use .gov</strong>
+        <span class="desc">A .gov website belongs to a government organization in the United States.</span>
+      </div>
+      <div>
+        <strong>Secure websites use HTTPS</strong>
+        <span class="desc">A lock (🔒) or https:// means you’re safely connected. Share sensitive information only on secure sites.</span>
+      </div>
+    </div>
+  </div>
+
   <header>
     <div class="brand"><img src="logo.png" alt="NetWatch logo"/> NetWatch</div>
     <div class="clock" id="clock">—:— —</div>
@@ -154,7 +178,18 @@
       const once=()=>{ seal.style.transition='transform 2.2s linear'; seal.style.transform='rotate(360deg)'; setTimeout(()=>{ seal.style.transform='rotate(0deg)'; },2300); };
       setTimeout(once,1200); setInterval(once,180000);
     }
-    window.addEventListener('DOMContentLoaded',()=>{ setNow(); spinSeal(); });
+
+    // Toggle gov banner dropdown
+    window.addEventListener('DOMContentLoaded',()=>{
+      setNow(); spinSeal();
+      const toggle=document.getElementById('gov-toggle');
+      const info=document.getElementById('gov-info');
+      if(toggle && info){
+        toggle.addEventListener('click',()=>{
+          info.classList.toggle('open');
+        });
+      }
+    });
   </script>
 </body>
 </html>
