@@ -27,7 +27,24 @@
     .brand{display:flex; align-items:center; gap:10px; font-weight:800; font-size:20px; color:var(--brand)}
     .brand img{height:36px; width:auto}
     .clock{font-variant-numeric:tabular-nums; color:var(--muted)}
-    .weather{display:flex; align-items:center; gap:8px; color:var(--text); font-size:14px}
+    .weather{display:flex; align-items:center; gap:8px; color:var(--text); font-size:14px; cursor:pointer}
+    .weather .wx-icon{font-size:18px}
+    .weather .wx-temp{font-weight:700}
+    .weather .wx-place{color:var(--muted)}
+    .wx-caret{font-size:12px; color:var(--muted)}
+    .weather-panel{position:absolute; right:20px; top:62px; width:320px; background:#0f172a; border:1px solid var(--ring); border-radius:8px; padding:12px; display:none; box-shadow:0 10px 30px rgba(0,0,0,.35); z-index:30}
+    .weather-panel.open{display:block}
+    .weather-head{display:flex; align-items:center; justify-content:space-between; margin-bottom:8px}
+    .unit-toggle{display:flex; gap:6px}
+    .unit-toggle button{background:#0b1220; color:var(--text); border:1px solid var(--ring); border-radius:999px; padding:4px 8px; font-size:12px}
+    .unit-toggle button.active{border-color:var(--brand); color:var(--brand)}
+    .forecast{display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-top:8px}
+    .chip{background:#0b1220; border:1px solid var(--ring); border-radius:8px; padding:8px; text-align:center}
+    .chip .t{font-size:12px; color:var(--muted)}
+    .chip .v{font-size:14px; font-weight:600}
+    .daily{display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:8px}
+    .daily .row{background:#0b1220; border:1px solid var(--ring); border-radius:8px; padding:8px; text-align:center; font-size:13px}
+    .wx-meta{font-size:12px; color:var(--muted)}
     .weather .wx-icon{font-size:18px}
     .weather .wx-temp{font-weight:700}
     .weather .wx-place{color:var(--muted)}
@@ -100,13 +117,25 @@
 
   <header>
     <div class="brand"><img src="logo.png" alt="NetWatch logo"/> NetWatch</div>
-    <div style="display:flex; align-items:center; gap:16px">
-      <div class="weather" id="weather" aria-live="polite" title="Local weather">
+    <div style="position:relative; display:flex; align-items:center; gap:16px">
+      <button class="weather" id="weatherBtn" aria-expanded="false" aria-controls="weatherPanel" title="Local weather">
         <span class="wx-icon" id="wx-icon">⛅</span>
         <span class="wx-temp" id="wx-temp">--°</span>
         <span class="wx-place" id="wx-place">Locating…</span>
-      </div>
+        <span class="wx-caret">▾</span>
+      </button>
       <div class="clock" id="clock">—:— —</div>
+      <div class="weather-panel" id="weatherPanel" role="dialog" aria-label="Weather details">
+        <div class="weather-head">
+          <div class="wx-meta" id="wx-meta">—</div>
+          <div class="unit-toggle" role="group" aria-label="Units">
+            <button id="uF" class="active" type="button">°F</button>
+            <button id="uC" type="button">°C</button>
+          </div>
+        </div>
+        <div class="forecast" id="wx-forecast"></div>
+        <div class="daily" id="wx-daily"></div>
+      </div>
     </div>
   </header>
 
@@ -289,8 +318,57 @@
       return '🌡️';
     }
 
-    async function fetchWeather(lat, lon){
-      const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&temperature_unit=fahrenheit&timezone=auto`;
+    async function fetchWeather(lat, lon, unit){
+      const tempUnit = unit==='celsius' ? 'celsius' : 'fahrenheit';
+      const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&hourly=temperature_2m,precipitation_probability,weathercode&daily=temperature_2m_max,temperature_2m_min,weathercode&temperature_unit=${tempUnit}&timezone=auto`;
+      const wxIcon=document.getElementById('wx-icon');
+      const wxTemp=document.getElementById('wx-temp');
+      const wxPlace=document.getElementById('wx-place');
+      const wxMeta=document.getElementById('wx-meta');
+      const boxH=document.getElementById('wx-forecast');
+      const boxD=document.getElementById('wx-daily');
+      try{
+        const r = await fetch(url, {cache:'no-store'});
+        const j = await r.json();
+        const cw = j.current_weather;
+        if(cw){
+          wxIcon.textContent = iconFromWeatherCode(cw.weathercode, cw.is_day);
+          wxTemp.textContent = Math.round(cw.temperature) + (tempUnit==='celsius'?'°C':'°F');
+          wxPlace.textContent = j.timezone_abbreviation || 'Local';
+          wxMeta.textContent = `Wind ${Math.round(cw.windspeed)} ${j.current_weather_units?.windspeed||'km/h'}`;
+        }
+        // Render next 8 hours
+        boxH.innerHTML = '';
+        if(j.hourly && j.hourly.time){
+          const now = Date.now();
+          const items = [];
+          for(let i=0;i<j.hourly.time.length;i++){
+            const t = new Date(j.hourly.time[i]).getTime();
+            if(t >= now && items.length<8){
+              items.push({
+                time: new Date(t).toLocaleTimeString([], {hour:'numeric'}),
+                temp: Math.round(j.hourly.temperature_2m[i]),
+                pop: j.hourly.precipitation_probability ? j.hourly.precipitation_probability[i] : null,
+                code: j.hourly.weathercode ? j.hourly.weathercode[i] : null
+              });
+            }
+          }
+          boxH.innerHTML = items.map(it=>`<div class="chip"><div class="t">${it.time}</div><div class="v">${it.temp}°</div><div class="t">${it.pop??0}% • ${iconFromWeatherCode(it.code,1)}</div></div>`).join('');
+        }
+        // Render next 3 days
+        boxD.innerHTML = '';
+        if(j.daily && j.daily.time){
+          const rows = j.daily.time.slice(0,3).map((d,idx)=>{
+            const hi = Math.round(j.daily.temperature_2m_max[idx]);
+            const lo = Math.round(j.daily.temperature_2m_min[idx]);
+            const ic = iconFromWeatherCode(j.daily.weathercode[idx], 1);
+            const lbl = new Date(d).toLocaleDateString([], {weekday:'short'});
+            return `<div class="row">${lbl}<div style="font-size:18px">${ic}</div><div>${lo}° / <strong>${hi}°</strong></div></div>`;
+          }).join('');
+          boxD.innerHTML = rows;
+        }
+      }catch(e){ wxPlace.textContent = 'Weather unavailable'; }
+    }&longitude=${lon}&current_weather=true&temperature_unit=fahrenheit&timezone=auto`;
       const wxIcon=document.getElementById('wx-icon');
       const wxTemp=document.getElementById('wx-temp');
       const wxPlace=document.getElementById('wx-place');
@@ -307,8 +385,45 @@
     }
 
     function initWeather(){
-      // Try browser geolocation (requires HTTPS & permission). Fallback to Denver, CO.
-      const fallback = {lat:39.7392, lon:-104.9903, label:'Denver'};
+      const fallback = {lat:33.7490, lon:-84.3880, label:'Atlanta'};
+      const wxPlace=document.getElementById('wx-place');
+      const panel = document.getElementById('weatherPanel');
+      const btn = document.getElementById('weatherBtn');
+      const uF = document.getElementById('uF');
+      const uC = document.getElementById('uC');
+      let unit = 'fahrenheit';
+      const refresh = (lat,lon)=>{ fetchWeather(lat,lon,unit); setInterval(()=>fetchWeather(lat,lon,unit), 10*60*1000); };
+
+      // Toggle panel
+      if(btn && panel){
+        btn.addEventListener('click', ()=>{
+          const open = panel.classList.toggle('open');
+          btn.setAttribute('aria-expanded', open?'true':'false');
+        });
+        document.addEventListener('click', (e)=>{ if(!panel.contains(e.target) && !btn.contains(e.target)) panel.classList.remove('open'); }, {capture:true});
+      }
+      // Unit toggles
+      if(uF && uC){
+        uF.addEventListener('click', ()=>{ unit='fahrenheit'; uF.classList.add('active'); uC.classList.remove('active'); reFetch(); });
+        uC.addEventListener('click', ()=>{ unit='celsius'; uC.classList.add('active'); uF.classList.remove('active'); reFetch(); });
+      }
+      let last = fallback;
+      const reFetch = ()=> refresh(last.lat,last.lon);
+
+      if(navigator.geolocation){
+        navigator.geolocation.getCurrentPosition(pos=>{
+          last = {lat:pos.coords.latitude, lon:pos.coords.longitude, label:'Local'};
+          if(wxPlace) wxPlace.textContent='Local';
+          refresh(last.lat,last.lon);
+        }, err=>{
+          if(wxPlace) wxPlace.textContent=fallback.label;
+          last = fallback; refresh(last.lat,last.lon);
+        }, {enableHighAccuracy:false, timeout:7000, maximumAge:10*60*1000});
+      } else {
+        if(wxPlace) wxPlace.textContent=fallback.label;
+        last = fallback; refresh(last.lat,last.lon);
+      }
+    };
       const wxPlace=document.getElementById('wx-place');
       if(navigator.geolocation){
         navigator.geolocation.getCurrentPosition(pos=>{
