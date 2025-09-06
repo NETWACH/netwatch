@@ -8,31 +8,26 @@
   <style>
     :root{
       --page-bg:url('https://imgs.search.brave.com/yKevjAUe9_VSjQPkpWXQ3nRdk4vm1j-i7FEMEvo7eZE/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9wbmcu/cG5ndHJlZS5jb20v/dGh1bWJfYmFjay9m/aDI2MC9iYWNrZ3Jv/dW5kLzIwMjIxMDA4/L3BuZ3RyZWUtdXMt/Y2FwaXRvbC1pbi10/aGUtbmlnaHQtcG93/ZXItZ292ZXJubWVu/dC1wb2xpdGljcy1w/aG90by1pbWFnZV82/OTIxODUyLmpwZw');
-      --panel:#0b0f14; /* main panel */
-      --surface:#111827; /* cards/fields */
-      --ring:#2e3a46; /* borders */
+      --panel:#0b0f14;
+      --surface:#111827;
+      --ring:#2e3a46;
       --text:#e5e7eb; --muted:#9ca3af; --brand:#60a5fa; --accent:#22d3ee;
     }
     *{box-sizing:border-box} html,body{height:100%}
     body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial; color:var(--text);
          background:var(--page-bg) no-repeat center/cover fixed}
 
-    /* Gov banner link */
     .gov-banner { background:#f8fafc; color:#111827; border-bottom:1px solid #e5e7eb; font-size:14px; padding:.6rem 1rem; }
     .gov-banner .flag { margin-right:.25rem; }
     .gov-banner a { color:#0a58ca; text-decoration:underline; cursor:pointer; margin-left:.35rem; }
     .gov-dropdown { display:none; background:#fff; color:#111; border-top:1px solid #e5e7eb; padding:1rem; font-size:14px; }
     .gov-dropdown.open { display:block; }
-    .gov-dropdown strong { display:block; margin-bottom:.2rem; }
-    .gov-dropdown .desc { color:#374151; display:block; margin-bottom:.8rem; }
 
-    /* Header */
     header{background:var(--panel); border-bottom:3px solid var(--ring); padding:12px 20px; display:flex; align-items:center; justify-content:space-between}
-    .brand{display:flex; align-items:center; gap:10px; font-weight:800; letter-spacing:.02em; font-size:20px; color:var(--brand)}
+    .brand{display:flex; align-items:center; gap:10px; font-weight:800; font-size:20px; color:var(--brand)}
     .brand img{height:36px; width:auto}
     .clock{font-variant-numeric:tabular-nums; color:var(--muted)}
 
-    /* Top menu with dropdowns */
     .topnav{background:var(--surface); border-bottom:2px solid var(--ring); display:flex; gap:18px; padding:10px 16px; justify-content:center}
     .menu{position:relative}
     .menu>a{color:var(--text); text-transform:uppercase; letter-spacing:.05em; font-weight:600; padding:8px 10px; display:inline-block}
@@ -42,23 +37,25 @@
     .submenu a:hover{background:#0b1220; color:var(--brand)}
     .menu:focus-within .submenu, .menu:hover .submenu{display:block}
 
-    /* Main content wrapper (centered; no sidebar) */
     .container{max-width:1100px; margin:20px auto; padding:20px; border:3px solid var(--ring); border-radius:10px; background:var(--panel); box-shadow:inset 0 0 12px #000}
     .title{font-size:28px; font-weight:800; text-transform:uppercase; text-align:center; color:var(--brand); margin:0 0 4px}
     .subtitle{color:var(--muted); text-align:center; margin:0 0 18px}
 
-    /* Executive tracker */
+    .exec-wrapper{display:grid; grid-template-columns:1fr 1fr; gap:20px;}
     .exec{display:grid; grid-template-columns:96px 1fr; gap:16px; align-items:center; padding:14px; border:2px solid var(--ring); border-radius:8px; background:var(--surface)}
     .exec img{width:96px; height:96px; border-radius:50%; background:#0b1220; border:1px solid var(--ring)}
-    .exec h2{margin:0 0 6px; font-size:14px; color:var(--muted); letter-spacing:.08em; text-transform:uppercase}
+    .exec h2{margin:0 0 6px; font-size:14px; color:var(--muted); text-transform:uppercase}
     .grid{display:grid; grid-template-columns:max-content 1fr; column-gap:12px; row-gap:6px; font-size:15px}
-    .grid dt{color:var(--muted); text-transform:uppercase; letter-spacing:.06em; font-size:12px}
+    .grid dt{color:var(--muted); text-transform:uppercase; font-size:12px}
     .grid dd{margin:0}
 
-    /* Quick links blocks */
+    .live-panel{padding:14px; border:2px solid var(--ring); border-radius:8px; background:var(--surface)}
+    .live-panel h2{margin:0 0 10px; font-size:14px; color:var(--muted); text-transform:uppercase}
+    .live-panel iframe{width:100%; height:300px; border:none; background:#0b1220}
+
     .links{display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:14px; margin-top:18px}
     .block{background:var(--surface); border:2px solid var(--ring); border-radius:8px; padding:12px}
-    .block h3{margin:0 0 8px; font-size:14px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted)}
+    .block h3{margin:0 0 8px; font-size:14px; text-transform:uppercase; color:var(--muted)}
     .block a{display:flex; justify-content:space-between; align-items:center; padding:10px 12px; margin:6px 0; border:1px solid var(--ring); border-radius:6px; color:var(--text)}
     .block a:hover{border-color:var(--brand); color:var(--brand)}
     .ext{font-size:12px; color:var(--muted)}
@@ -71,14 +68,8 @@
     <span class="flag">🇺🇸</span> Not an official website of the United States government
     <a id="gov-toggle">Here's how you know</a>
     <div class="gov-dropdown" id="gov-info">
-      <div>
-        <strong>Websites use .gov</strong>
-        <span class="desc">A .gov website belongs to a government organization in the United States.</span>
-      </div>
-      <div>
-        <strong>Secure websites use HTTPS</strong>
-        <span class="desc">A lock (🔒) or https:// means you’re safely connected. Share sensitive information only on secure sites.</span>
-      </div>
+      <div><strong>Websites use .gov</strong> <span class="desc">A .gov website belongs to a government organization in the United States.</span></div>
+      <div><strong>Secure websites use HTTPS</strong> <span class="desc">A lock (🔒) or https:// means you’re safely connected. Share sensitive information only on secure sites.</span></div>
     </div>
   </div>
 
@@ -87,7 +78,6 @@
     <div class="clock" id="clock">—:— —</div>
   </header>
 
-  <!-- Top navigation with simple dropdowns (no sidebar) -->
   <nav class="topnav" aria-label="Primary">
     <div class="menu"><a href="#home">Home</a></div>
     <div class="menu"><a href="#programs">Programs</a>
@@ -119,21 +109,30 @@
     <h1 class="title">NetWatch — Official Monitoring Portal</h1>
     <p class="subtitle">Government Monitoring & Information Dashboard</p>
 
-    <!-- Executive tracker (single panel) -->
-    <section class="exec" aria-labelledby="exec-title">
-      <img id="seal" alt="Seal of the President of the United States" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Seal_of_the_President_of_the_United_States.svg/240px-Seal_of_the_President_of_the_United_States.svg.png"/>
-      <div>
-        <h2 id="exec-title">Executive Tracker</h2>
-        <dl class="grid">
-          <dt>President</dt><dd>Donald J. Trump (47th)</dd>
-          <dt>Vice President</dt><dd>JD Vance</dd>
-          <dt>Term</dt><dd>January 20, 2025 – January 20, 2029</dd>
-          <dt>Last Update</dt><dd id="last-update">—</dd>
-        </dl>
-      </div>
-    </section>
+    <div class="exec-wrapper">
+      <section class="exec" aria-labelledby="exec-title">
+        <img id="seal" alt="Seal of the President of the United States" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Seal_of_the_President_of_the_United_States.svg/240px-Seal_of_the_President_of_the_United_States.svg.png"/>
+        <div>
+          <h2 id="exec-title">Executive Tracker</h2>
+          <dl class="grid">
+            <dt>President</dt><dd>Donald J. Trump (47th)</dd>
+            <dt>Vice President</dt><dd>JD Vance</dd>
+            <dt>Term</dt><dd>January 20, 2025 – January 20, 2029</dd>
+            <dt>Last Update</dt><dd id="last-update">—</dd>
+          </dl>
+        </div>
+      </section>
 
-    <!-- Quick agency & reference links (replaces old boxes) -->
+      <aside class="live-panel">
+        <h2>Live Approval Ratings</h2>
+        <!-- Placeholder: Replace with actual approval rating widget or API integration -->
+        <iframe src="https://projects.fivethirtyeight.com/polls/president-approval/iframe/" title="Approval Ratings"></iframe>
+        <h2>Live Stock Market</h2>
+        <!-- Finnhub market widget -->
+        <iframe src="https://widget.finnhub.io/widgets/1/stocks?symbols=AAPL,MSFT,AMZN,GOOGL,TSLA&theme=dark" title="Stock Market Widget"></iframe>
+      </aside>
+    </div>
+
     <section class="links" id="resources" aria-label="Key Links">
       <div class="block">
         <h3>Federal Agencies</h3>
@@ -172,14 +171,11 @@
       tick(); setInterval(tick,1000);
       const lu=document.getElementById('last-update'); if(lu) lu.textContent=df.format(new Date());
     }
-    // Spin the seal briefly on load and every 3 minutes
     function spinSeal(){
       const seal=document.getElementById('seal'); if(!seal) return;
       const once=()=>{ seal.style.transition='transform 2.2s linear'; seal.style.transform='rotate(360deg)'; setTimeout(()=>{ seal.style.transform='rotate(0deg)'; },2300); };
       setTimeout(once,1200); setInterval(once,180000);
     }
-
-    // Toggle gov banner dropdown
     window.addEventListener('DOMContentLoaded',()=>{
       setNow(); spinSeal();
       const toggle=document.getElementById('gov-toggle');
