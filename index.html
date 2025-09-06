@@ -6,167 +6,155 @@
   <title>📰 NetWatch | Home</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
   <style>
-    :root {
-      --panel-bg: #0a0e13;
-      --card: #0d1117;
-      --field: #161b22;
-      --text: #e5e7eb;
-      --muted: #9ca3af;
-      --brand: #60a5fa;
-      --accent: #22d3ee;
-      --ring: #30363d;
-      --seal-size: 80px;
+    :root{
+      --page-bg:url('https://imgs.search.brave.com/yKevjAUe9_VSjQPkpWXQ3nRdk4vm1j-i7FEMEvo7eZE/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9wbmcu/cG5ndHJlZS5jb20v/dGh1bWJfYmFjay9m/aDI2MC9iYWNrZ3Jv/dW5kLzIwMjIxMDA4/L3BuZ3RyZWUtdXMt/Y2FwaXRvbC1pbi10/aGUtbmlnaHQtcG93/ZXItZ292ZXJubWVu/dC1wb2xpdGljcy1w/aG90by1pbWFnZV82/OTIxODUyLmpwZw');
+      --panel:#0b0f14; /* main panel */
+      --surface:#111827; /* cards/fields */
+      --ring:#2e3a46; /* borders */
+      --text:#e5e7eb; --muted:#9ca3af; --brand:#60a5fa; --accent:#22d3ee;
     }
-    * { box-sizing: border-box; }
-    html, body { height: 100%; margin:0; }
-    body {
-      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
-      background: url('https://imgs.search.brave.com/yKevjAUe9_VSjQPkpWXQ3nRdk4vm1j-i7FEMEvo7eZE/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9wbmcu/cG5ndHJlZS5jb20v/dGh1bWJfYmFjay9m/aDI2MC9iYWNrZ3Jv/dW5kLzIwMjIxMDA4/L3BuZ3RyZWUtdXMt/Y2FwaXRvbC1pbi10/aGUtbmlnaHQtcG93/ZXItZ292ZXJubWVu/dC1wb2xpdGljcy1w/aG90by1pbWFnZV82/OTIxODUyLmpwZw') no-repeat center center fixed;
-      background-size: cover;
-      color: var(--text);
-    }
+    *{box-sizing:border-box} html,body{height:100%}
+    body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial; color:var(--text);
+         background:var(--page-bg) no-repeat center/cover fixed}
 
-    #info-bar { position: sticky; top: 0; z-index: 50; background: var(--panel-bg); border-bottom: 3px solid var(--ring); width: 100%; overflow: hidden; }
-    #info-bar .marquee { display: flex; gap: 4rem; padding: 12px 16px; font-size: clamp(16px, 2.2vw, 22px); font-weight: 700; white-space: nowrap; animation: marquee 25s linear infinite; }
-    @keyframes marquee { to { transform: translateX(-50%); } }
+    /* Header */
+    header{background:var(--panel); border-bottom:3px solid var(--ring); padding:12px 20px; display:flex; align-items:center; justify-content:space-between}
+    .brand{font-weight:800; letter-spacing:.02em; font-size:20px; color:var(--brand)}
+    .clock{font-variant-numeric:tabular-nums; color:var(--muted)}
 
-    .header { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 18px 20px; border-bottom: 3px solid var(--ring); background: var(--panel-bg); }
-    .logo-text { font-weight: 800; letter-spacing: .5px; font-size: clamp(22px, 3vw, 30px); color: var(--brand); }
+    /* Top menu with dropdowns */
+    .topnav{background:var(--surface); border-bottom:2px solid var(--ring); display:flex; gap:18px; padding:10px 16px; justify-content:center}
+    .menu{position:relative}
+    .menu>a{color:var(--text); text-transform:uppercase; letter-spacing:.05em; font-weight:600; padding:8px 10px; display:inline-block}
+    .menu>a:hover{color:var(--brand)}
+    .submenu{position:absolute; top:100%; left:0; min-width:220px; background:#0f172a; border:1px solid var(--ring); border-radius:6px; padding:8px; display:none; box-shadow:0 10px 30px rgba(0,0,0,.4)}
+    .submenu a{display:block; padding:8px 10px; color:var(--text); border-radius:4px}
+    .submenu a:hover{background:#0b1220; color:var(--brand)}
+    .menu:focus-within .submenu, .menu:hover .submenu{display:block}
 
-    #clock-container { padding: 10px 20px; color: var(--muted); font-variant-numeric: tabular-nums; border-bottom: 3px solid var(--ring); background: var(--panel-bg); }
+    /* Main content wrapper (centered; no sidebar) */
+    .container{max-width:1100px; margin:20px auto; padding:20px; border:3px solid var(--ring); border-radius:10px; background:var(--panel); box-shadow:inset 0 0 12px #000}
+    .title{font-size:28px; font-weight:800; text-transform:uppercase; text-align:center; color:var(--brand); margin:0 0 4px}
+    .subtitle{color:var(--muted); text-align:center; margin:0 0 18px}
 
-    .panel { margin: 20px; padding: 20px; border: 3px solid var(--ring); border-radius: 6px; background: var(--panel-bg); box-shadow: inset 0 0 10px #000; }
+    /* Executive tracker (single, top; no extras below) */
+    .exec{display:grid; grid-template-columns:96px 1fr; gap:16px; align-items:center; padding:14px; border:2px solid var(--ring); border-radius:8px; background:var(--surface)}
+    .exec img{width:96px; height:96px; border-radius:50%; background:#0b1220; border:1px solid var(--ring)}
+    .exec h2{margin:0 0 6px; font-size:14px; color:var(--muted); letter-spacing:.08em; text-transform:uppercase}
+    .grid{display:grid; grid-template-columns:max-content 1fr; column-gap:12px; row-gap:6px; font-size:15px}
+    .grid dt{color:var(--muted); text-transform:uppercase; letter-spacing:.06em; font-size:12px}
+    .grid dd{margin:0}
 
-    .tracker { display: grid; grid-template-columns: var(--seal-size) 1fr; gap: 12px; align-items: center; padding: 12px; border: 2px solid var(--ring); border-radius: 6px; background: var(--field); }
-    .tracker img { width: var(--seal-size); height: var(--seal-size); object-fit: contain; border-radius: 50%; background: var(--panel-bg); border: 1px solid var(--ring); }
-    @keyframes spinOnce { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-    .spin { animation: spinOnce 2.2s linear 1; }
+    /* Quick links blocks */
+    .links{display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:14px; margin-top:18px}
+    .block{background:var(--surface); border:2px solid var(--ring); border-radius:8px; padding:12px}
+    .block h3{margin:0 0 8px; font-size:14px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted)}
+    .block a{display:flex; justify-content:space-between; align-items:center; padding:10px 12px; margin:6px 0; border:1px solid var(--ring); border-radius:6px; color:var(--text)}
+    .block a:hover{border-color:var(--brand); color:var(--brand)}
+    .ext{font-size:12px; color:var(--muted)}
 
-    nav { display: flex; flex-wrap: wrap; gap: 10px; padding: 12px 20px; border-bottom: 3px solid var(--ring); background: var(--panel-bg); }
-    nav a { padding: 10px 14px; border: 2px solid var(--ring); border-radius: 4px; color: var(--text); background: var(--field); font-weight: 600; text-transform: uppercase; letter-spacing: .05em; }
-    nav a:hover { border-color: var(--brand); color: var(--brand); background: #111; }
-
-    main { max-width: 1100px; margin: 20px auto; padding: 20px; border: 3px solid var(--ring); border-radius: 8px; background: var(--panel-bg); box-shadow: inset 0 0 12px #000; }
-    .main-title { font-size: clamp(28px, 4vw, 40px); font-weight: 800; letter-spacing: .3px; color: var(--brand); text-transform: uppercase; text-align: center; }
-    .subtitle { color: var(--muted); margin-top: 4px; text-align: center; }
-
-    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-top: 16px; }
-    .card { border: 2px solid var(--ring); border-radius: 6px; overflow: hidden; background: var(--field); box-shadow: 0 2px 6px rgba(0,0,0,.6); }
-    .card h3 { margin: 0; padding: 14px; font-size: 16px; letter-spacing: .3px; background: var(--panel-bg); color: var(--brand); font-weight: 700; border-bottom: 2px solid var(--ring); text-transform: uppercase; text-align: center; }
-    .card iframe { width: 100%; height: 220px; border: none; background: var(--panel-bg); }
-
-    footer { margin: 40px 0 20px; text-align: center; color: var(--muted); background: var(--panel-bg); padding: 10px; border-top: 3px solid var(--ring); font-size: 14px; letter-spacing: .05em; text-transform: uppercase; }
+    footer{margin:30px 0 16px; text-align:center; color:var(--muted)}
   </style>
 </head>
 <body>
-  <div id="info-bar" aria-live="polite">
-    <div class="marquee">
-      <span>Welcome to 📰 NetWatch</span>
-      <span>Last update: <strong id="last-update">—</strong></span>
-      <span aria-hidden="true">Welcome to 📰 NetWatch</span>
-      <span aria-hidden="true">Last update: <strong id="last-update-dup">—</strong></span>
-    </div>
-  </div>
-
-  <header class="header">
-    <div class="logo-text">📰 NETWATCH</div>
+  <header>
+    <div class="brand">📰 NetWatch</div>
+    <div class="clock" id="clock">—:— —</div>
   </header>
 
-  <div id="clock-container" aria-live="polite">
-    <span id="clock-time">—:— —</span>
-    <span class="pill" id="clock-tz">—</span>
-  </div>
-
-  <div class="panel">
-    <section class="tracker" id="exec-tracker">
-      <img id="seal" loading="lazy" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Seal_of_the_President_of_the_United_States.svg/240px-Seal_of_the_President_of_the_United_States.svg.png" alt="Seal of the President of the United States" />
-      <div>
-        <div><strong>President:</strong> Donald J. Trump (47th)</div>
-        <div><strong>Vice President:</strong> JD Vance</div>
-        <div><strong>Term:</strong> January 20, 2025 – January 20, 2029</div>
+  <!-- Top navigation with simple dropdowns (no sidebar) -->
+  <nav class="topnav" aria-label="Primary">
+    <div class="menu"><a href="#home">Home</a></div>
+    <div class="menu"><a href="#programs">Programs</a>
+      <div class="submenu" role="menu">
+        <a href="#medicaid">Medicaid</a>
+        <a href="#housing">Housing</a>
+        <a href="#snap">SNAP / EBT</a>
+        <a href="#social-security">Social Security</a>
       </div>
-    </section>
-  </div>
-
-  <nav>
-    <a href="#home">Home</a>
-    <a href="#news">News & Testimonies</a>
-    <a href="#medicaid">Medicaid</a>
-    <a href="#social-security">Social Security</a>
+    </div>
+    <div class="menu"><a href="#resources">Resources</a>
+      <div class="submenu" role="menu">
+        <a href="#laws">Federal Laws</a>
+        <a href="#regs">Regulations</a>
+        <a href="#reports">Reports</a>
+        <a href="#cases">Case Studies</a>
+      </div>
+    </div>
+    <div class="menu"><a href="#about">About</a>
+      <div class="submenu" role="menu">
+        <a href="#mission">Mission</a>
+        <a href="#contact">Contact</a>
+        <a href="#foia">FOIA</a>
+      </div>
+    </div>
   </nav>
 
-  <main id="home">
-    <h1 class="main-title">📰 NetWatch</h1>
-    <p class="subtitle">Official Monitoring Portal</p>
+  <main class="container" id="home">
+    <h1 class="title">NetWatch — Official Monitoring Portal</h1>
+    <p class="subtitle">Government Monitoring & Information Dashboard</p>
 
-    <div class="cards">
-      <article class="card" id="card-medicaid">
-        <h3>Medicaid</h3>
-        <iframe src="/blog/medicaid.html"></iframe>
-      </article>
+    <!-- Executive tracker (single panel) -->
+    <section class="exec" aria-labelledby="exec-title">
+      <img id="seal" alt="Seal of the President of the United States" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Seal_of_the_President_of_the_United_States.svg/240px-Seal_of_the_President_of_the_United_States.svg.png"/>
+      <div>
+        <h2 id="exec-title">Executive Tracker</h2>
+        <dl class="grid">
+          <dt>President</dt><dd>Donald J. Trump (47th)</dd>
+          <dt>Vice President</dt><dd>JD Vance</dd>
+          <dt>Term</dt><dd>January 20, 2025 – January 20, 2029</dd>
+          <dt>Last Update</dt><dd id="last-update">—</dd>
+        </dl>
+      </div>
+    </section>
 
-      <article class="card" id="card-housing">
-        <h3>Housing</h3>
-        <iframe src="/blog/housing.html"></iframe>
-      </article>
-
-      <article class="card" id="card-snap">
-        <h3>SNAP / EBT</h3>
-        <iframe src="/blog/snap.html"></iframe>
-      </article>
-
-      <article class="card" id="card-ssa">
-        <h3>Social Security</h3>
-        <iframe src="/blog/social-security.html"></iframe>
-      </article>
-    </div>
+    <!-- Quick agency & reference links (replaces old boxes) -->
+    <section class="links" id="resources" aria-label="Key Links">
+      <div class="block">
+        <h3>Federal Agencies</h3>
+        <a href="https://www.cms.gov/" target="_blank" rel="noopener">CMS<span class="ext">cms.gov ↗</span></a>
+        <a href="https://www.hud.gov/" target="_blank" rel="noopener">HUD<span class="ext">hud.gov ↗</span></a>
+        <a href="https://www.usda.gov/" target="_blank" rel="noopener">USDA<span class="ext">usda.gov ↗</span></a>
+        <a href="https://www.ssa.gov/" target="_blank" rel="noopener">SSA<span class="ext">ssa.gov ↗</span></a>
+        <a href="http://doj.gov/" target="_blank" rel="noopener">DOJ<span class="ext">doj.gov ↗</span></a>
+      </div>
+      <div class="block">
+        <h3>Official Registers</h3>
+        <a href="https://www.federalregister.gov/" target="_blank" rel="noopener">Federal Register<span class="ext">federalregister.gov ↗</span></a>
+        <a href="https://www.congress.gov/" target="_blank" rel="noopener">Congress<span class="ext">congress.gov ↗</span></a>
+        <a href="https://www.govinfo.gov/" target="_blank" rel="noopener">GovInfo<span class="ext">govinfo.gov ↗</span></a>
+      </div>
+      <div class="block">
+        <h3>Programs</h3>
+        <a href="#medicaid">Medicaid<span class="ext">internal ↗</span></a>
+        <a href="#housing">Housing<span class="ext">internal ↗</span></a>
+        <a href="#snap">SNAP / EBT<span class="ext">internal ↗</span></a>
+        <a href="#social-security">Social Security<span class="ext">internal ↗</span></a>
+      </div>
+    </section>
   </main>
 
-  <footer>
-    © <span id="year"></span> NetWatch • Atlanta, GA 30303
-  </footer>
+  <footer>© <span id="year"></span> NetWatch • Atlanta, GA 30303</footer>
 
   <script>
-    function setLastUpdate() {
-      const now = new Date();
-      const fmt = new Intl.DateTimeFormat('en-US', { timeZone: 'America/Denver', year: 'numeric', month: 'numeric', day: 'numeric' });
-      const dateStr = fmt.format(now);
-      const a = document.getElementById('last-update');
-      const b = document.getElementById('last-update-dup');
-      if (a) a.textContent = dateStr;
-      if (b) b.textContent = dateStr;
+    function setNow(){
+      const y=document.getElementById('year'); if(y) y.textContent=new Date().getFullYear();
+      const tz='America/Denver';
+      const clock=document.getElementById('clock');
+      const tf=new Intl.DateTimeFormat('en-US',{timeZone:tz,hour:'numeric',minute:'2-digit',second:'2-digit',hour12:true});
+      const df=new Intl.DateTimeFormat('en-US',{timeZone:tz,year:'numeric',month:'numeric',day:'numeric'});
+      const tick=()=>{ if(clock) clock.textContent=tf.format(new Date()); };
+      tick(); setInterval(tick,1000);
+      const lu=document.getElementById('last-update'); if(lu) lu.textContent=df.format(new Date());
     }
-
-    function startClock() {
-      const timeEl = document.getElementById('clock-time');
-      const tzEl = document.getElementById('clock-tz');
-      const tz = 'America/Denver';
-      if (tzEl) tzEl.textContent = tz.replace('America/', '').replace('_', ' ');
-      const fmt = new Intl.DateTimeFormat('en-US', { timeZone: tz, hour: 'numeric', minute: '2-digit', second: '2-digit', hour12: true, weekday: 'short', month: 'short', day: '2-digit' });
-      const tick = () => { if (timeEl) timeEl.textContent = fmt.format(new Date()); };
-      tick();
-      setInterval(tick, 1000);
+    // Spin the seal briefly on load and every 3 minutes
+    function spinSeal(){
+      const seal=document.getElementById('seal'); if(!seal) return;
+      const once=()=>{ seal.style.transition='transform 2.2s linear'; seal.style.transform='rotate(360deg)'; setTimeout(()=>{ seal.style.transform='rotate(0deg)'; },2300); };
+      setTimeout(once,1200); setInterval(once,180000);
     }
-
-    function startSealSpin() {
-      const seal = document.getElementById('seal');
-      if (!seal) return;
-      const spinNow = () => {
-        seal.classList.add('spin');
-        const onEnd = () => { seal.classList.remove('spin'); seal.removeEventListener('animationend', onEnd); };
-        seal.addEventListener('animationend', onEnd);
-      };
-      setTimeout(spinNow, 2000);
-      setInterval(spinNow, 180000);
-    }
-
-    window.addEventListener('DOMContentLoaded', () => {
-      const y = document.getElementById('year');
-      if (y) y.textContent = new Date().getFullYear();
-      setLastUpdate();
-      startClock();
-      startSealSpin();
-    });
+    window.addEventListener('DOMContentLoaded',()=>{ setNow(); spinSeal(); });
   </script>
 </body>
 </html>
+
