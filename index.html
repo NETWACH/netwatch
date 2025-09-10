@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NetWatch App</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <header class="card">
+    <img src="logo.png" alt="Logo" style="height:40px;">
+    <div id="clock"></div>
+  </header>
+
+  <main>
+    <section class="card">
+      <h2>Weather</h2>
+      <div id="weather">Loading...</div>
+    </section>
+
+    <section class="card">
+      <h2>Livestock Market</h2>
+      <div id="market">Loading...</div>
+    </section>
+
+    <section class="card">
+      <h2>Approval Ratings</h2>
+      <canvas id="approvalChart"></canvas>
+    </section>
+  </main>
+
+  <script src="js/clock.js"></script>
+  <script src="js/weather.js"></script>
+  <script src="js/market.js"></script>
+  <script src="js/approval.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
