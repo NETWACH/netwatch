@@ -1,19 +1,106 @@
-body {
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, sans-serif;
-  background-color: #121212;
-  color: #f5f5f7;
-  margin: 0;
-  padding: 0;
+:root{
+  --page-bg:#0b0f14;
+  --panel:#0b0f14;
+  --surface:#111827;
+  --ring:#2e3a46;
+  --text:#e5e7eb; --muted:#9ca3af; --brand:#60a5fa; --accent:#22d3ee;
 }
 
-.card {
-  border-radius: 24px;
-  background: #1c1c1e;
-  padding: 16px;
-  margin: 16px;
-  box-shadow: 0 4px 16px rgba(0,0,0,.3);
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family:-apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, system-ui, Segoe UI, Roboto, Helvetica, Arial;
+  color:var(--text);
+  background:radial-gradient(1200px 600px at 50% -20%, #101826 0%, #0b0f14 60%, #070a0e 100%);
 }
 
-h2 {
-  margin-top: 0;
+/* iPhone-style “cards” */
+.card{
+  background:#1c1c1e;
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:24px;
+  padding:16px;
+  box-shadow:0 10px 30px rgba(0,0,0,.35);
 }
+
+/* Gov banner */
+.gov-banner{background:#f8fafc;color:#111827;border-bottom:1px solid #e5e7eb;font-size:14px;padding:.6rem 1rem}
+.gov-banner a{color:#0a58ca;text-decoration:underline;cursor:pointer;margin-left:.35rem}
+.gov-dropdown{display:none;background:#fff;color:#111;border-top:1px solid #e5e7eb;padding:1rem;font-size:14px}
+.gov-dropdown.open{display:block}
+
+/* Header */
+.header{
+  display:flex;align-items:center;justify-content:space-between;
+  background:linear-gradient(180deg,#121826, #0b0f14);
+  border:1px solid rgba(255,255,255,.08);
+}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:20px;color:var(--brand)}
+.brand img{height:36px;width:auto}
+.clock{font-variant-numeric:tabular-nums;color:var(--muted)}
+.weather{display:flex;align-items:center;gap:8px;color:var(--text);font-size:14px;cursor:pointer;background:#0f172a;border:1px solid var(--ring);border-radius:999px;padding:6px 10px}
+.wx-caret{font-size:12px;color:var(--muted)}
+.weather-panel{position:absolute;right:20px;top:90px;width:340px;background:#0f172a;border:1px solid var(--ring);border-radius:16px;padding:12px;display:none;box-shadow:0 20px 40px rgba(0,0,0,.45);z-index:30}
+.weather-panel.open{display:block}
+.weather-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.unit-toggle{display:flex;gap:6px}
+.unit-toggle button{background:#0b1220;color:var(--text);border:1px solid var(--ring);border-radius:999px;padding:4px 8px;font-size:12px}
+.unit-toggle button.active{border-color:var(--brand);color:var(--brand)}
+.forecast{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:8px}
+.chip{background:#0b1220;border:1px solid var(--ring);border-radius:10px;padding:8px;text-align:center}
+.chip .t{font-size:12px;color:var(--muted)}
+.chip .v{font-size:14px;font-weight:600}
+.daily{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
+.daily .row{background:#0b1220;border:1px solid var(--ring);border-radius:10px;padding:8px;text-align:center;font-size:13px}
+.wx-meta{font-size:12px;color:var(--muted)}
+
+/* Top nav like an iOS tab bar */
+.topnav{
+  position:sticky;top:0;z-index:10;
+  display:flex;gap:18px;justify-content:center;
+  padding:10px 16px;background:#111827cc;border-bottom:1px solid var(--ring);backdrop-filter:blur(10px)
+}
+.topnav a{color:var(--text);text-transform:uppercase;letter-spacing:.05em;font-weight:600;padding:8px 10px;border-radius:10px}
+.topnav a:hover{background:#0b1220;color:var(--brand)}
+
+/* Container & sections */
+.container{max-width:1100px;margin:20px auto;padding:20px;border:1px solid var(--ring);border-radius:20px;background:rgba(15,23,42,.55)}
+.title{font-size:28px;font-weight:800;text-transform:uppercase;text-align:center;color:var(--brand);margin:0 0 4px}
+.subtitle{color:var(--muted);text-align:center;margin:0 0 18px}
+
+/* Executive & dashboard */
+.exec{display:grid;grid-template-columns:96px 1fr;gap:16px;align-items:center;padding:14px;border:1px solid var(--ring);border-radius:16px;background:#101826;margin-bottom:16px}
+.exec img{width:96px;height:96px;border-radius:50%;background:#0b1220;border:1px solid var(--ring)}
+.exec h2{margin:0 0 6px;font-size:14px;color:var(--muted);text-transform:uppercase}
+.grid{display:grid;grid-template-columns:max-content 1fr;column-gap:12px;row-gap:6px;font-size:15px}
+.grid dt{color:var(--muted);text-transform:uppercase;font-size:12px}
+.grid dd{margin:0}
+.live-panel{padding:14px;border:1px solid var(--ring);border-radius:16px;background:#101826;margin:16px 0}
+.live-panel h2{margin:0 0 10px;font-size:14px;color:var(--muted);text-transform:uppercase}
+#approvalChart{width:100%;height:280px}
+
+.watching-section h2{margin:.2rem 0 .6rem;color:var(--muted);text-transform:uppercase;font-size:14px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.cards .card{background:#0f172a;border:1px solid var(--ring)}
+
+.links{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-top:18px}
+.block{background:#0f172a;border:1px solid var(--ring);border-radius:14px;padding:12px}
+.block h3{margin:0 0 8px;font-size:14px;text-transform:uppercase;color:var(--muted)}
+.block a{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;margin:6px 0;border:1px solid var(--ring);border-radius:10px;color:var(--text)}
+.block a:hover{border-color:var(--brand);color:var(--brand)}
+
+/* Congress directory */
+.congress{margin-top:20px;padding:14px;border:1px solid var(--ring);border-radius:16px;background:#101826}
+.congress h2{margin:0 0 10px;font-size:14px;color:var(--muted);text-transform:uppercase}
+.congress .controls{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.congress input,.congress select{background:#0f172a;color:var(--text);border:1px solid var(--ring);border-radius:8px;padding:8px 10px}
+.congress table{width:100%;border-collapse:collapse;font-size:14px}
+.congress th,.congress td{border-top:1px solid var(--ring);padding:8px 6px;text-align:left}
+.congress th{color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.05em}
+.badge{display:inline-block;font-size:11px;padding:2px 6px;margin-left:6px;border:1px solid var(--ring);border-radius:999px;color:#e5e7eb;background:#0f172a}
+.term-soon{color:#fbbf24}
+.term-past{color:#f87171}
+
+/* Footer */
+footer{margin:30px 0 16px;text-align:center;color:var(--muted)}
