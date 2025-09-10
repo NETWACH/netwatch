@@ -7,6 +7,19 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    /* Limit approval chart size */
+    #approvalChart {
+      max-width: 600px;
+      max-height: 300px;
+      margin: 0 auto;
+      display: block;
+    }
+    .live-panel canvas {
+      width: 100% !important;
+      height: auto !important;
+    }
+  </style>
 </head>
 <body>
   <!-- Banner -->
@@ -149,5 +162,85 @@
   <script src="weather.js"></script>
   <script src="market.js"></script>
   <script src="approval.js"></script>
+
+  <script>
+    // Congress.gov API integration (requires API key in meta if available)
+    async function buildCongress(){
+      const key = (document.querySelector('meta[name="congress-api-key"]')||{}).content;
+      const note = document.getElementById('congressNote');
+      const tbody = document.querySelector('#congressTable tbody');
+      const congressNumber = 119;
+      if(!tbody) return;
+      let members=[];
+      if(key){
+        try{
+          const url = `https://api.congress.gov/v3/member/congress/${congressNumber}?currentMember=true&limit=250&format=json&api_key=${key}`;
+          const resp = await fetch(url);
+          if(resp.ok){
+            const json = await resp.json();
+            members = (json.members||[]).map(m=>({
+              name: m.fullName,
+              chamber: m.chamber,
+              state: m.state + (m.district?`-${m.district}`:''),
+              party: m.party,
+              end: m.endDate,
+              url: m.url
+            }));
+          }
+        }catch(e){ console.error(e); }
+      }
+      if(!members.length){
+        note.innerHTML = 'Add your Congress.gov API key in <code>&lt;meta name="congress-api-key"&gt;</code> for live updates. For now, use official directories.';
+        tbody.innerHTML = `<tr><td colspan="7"><a href="https://www.senate.gov/senators/" target="_blank">Senators</a> · <a href="https://www.house.gov/representatives" target="_blank">Representatives</a></td></tr>`;
+        return;
+      }
+      tbody.innerHTML = members.map(m=>{
+        const end = m.end ? new Date(m.end) : null;
+        const today = new Date();
+        const daysLeft = end ? Math.ceil((end - today)/86400000) : '';
+        return `<tr>
+          <td>${m.name}</td>
+          <td>${m.chamber}</td>
+          <td>${m.state}</td>
+          <td>${m.party}</td>
+          <td>${m.end? new Date(m.end).toLocaleDateString():''}</td>
+          <td>${daysLeft}</td>
+          <td><a href="${m.url}" target="_blank">Profile ↗</a></td>
+        </tr>`;
+      }).join('');
+    }
+
+    // Filters
+    function initFilters(){
+      const tbody=document.querySelector('#congressTable tbody');
+      const filterText=document.getElementById('filterText');
+      const filterChamber=document.getElementById('filterChamber');
+      const filterState=document.getElementById('filterState');
+      const apply=()=>{
+        const q=(filterText.value||'').toLowerCase();
+        const ch=filterChamber.value;
+        const st=filterState.value;
+        for(const tr of tbody.querySelectorAll('tr')){
+          const name=tr.children[0].textContent.toLowerCase();
+          const chamber=tr.children[1].textContent;
+          const state=tr.children[2].textContent;
+          const party=tr.children[3].textContent.toLowerCase();
+          const matchesText=!q||name.includes(q)||party.includes(q)||state.toLowerCase().includes(q);
+          const matchesChamber=!ch||chamber===ch;
+          const matchesState=!st||state.startsWith(st);
+          tr.style.display=(matchesText&&matchesChamber&&matchesState)?'':'none';
+        }
+      };
+      filterText.addEventListener('input',apply);
+      filterChamber.addEventListener('change',apply);
+      filterState.addEventListener('change',apply);
+    }
+
+    document.addEventListener('DOMContentLoaded',()=>{
+      buildCongress();
+      initFilters();
+      document.getElementById('year').textContent=new Date().getFullYear();
+    });
+  </script>
 </body>
 </html>
