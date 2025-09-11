@@ -16,7 +16,7 @@ body {
   color: var(--text);
 
   /* Background = Your uploaded sky with birds */
-  background: url("sunset-bird-flight-stockcake.jpg") no-repeat center center fixed;
+  background: url("us.jpg") no-repeat center center fixed;
   background-size: cover;
 }
 
