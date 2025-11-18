@@ -1418,7 +1418,14 @@ footer {
     height: 26px;
   }
 
-  /* Center seal: smaller so it doesn’t cover everything */
+  /* 🔹 Presidential seal: small, parked in the top-right on phones */
+  .seal-center-btn {
+    top: 10px;
+    right: 14px;
+    left: auto;
+    transform: none;       /* no centering translate */
+  }
+
   .seal-center-btn::before {
     width: 68px;
     height: 68px;
@@ -1427,6 +1434,16 @@ footer {
   .seal-center-icon {
     width: 48px;
     height: 48px;
+  }
+
+  /* Exec panel: drop down from the seal, right-aligned */
+  .exec-panel {
+    top: 60px;
+    left: auto;
+    right: 12px;
+    transform: none;
+    min-width: 260px;
+    max-width: calc(100% - 24px);
   }
 
   /* Main content spacing */
@@ -1450,7 +1467,7 @@ footer {
     gap: 10px;
   }
 
-  /* Optional: hide side rail on very small screens */
+  /* Hide side rail on very small screens */
   .sidenav {
     display: none;
   }
@@ -1461,4 +1478,3 @@ footer {
     margin-inline: auto;
   }
 }
-
