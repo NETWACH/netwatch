@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Weather</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <!-- ⭐ THIS IS THE CRITICAL LINE YOU WERE MISSING ⭐ -->
+  <body class="weather-app-body">
+
+    <div class="weather-app">
+
+      <header class="weather-app-header">
+        <button id="wx-app-back" class="wx-app-back" type="button">← Back</button>
+        <div class="weather-app-title">Local Weather</div>
+        <div class="unit-toggle unit-toggle-app">
+          <button id="uF" class="active">°F</button>
+          <button id="uC">°C</button>
+        </div>
+      </header>
+
+      <main class="weather-app-main">
+
+        <!-- HERO CARD -->
+        <section class="weather-hero">
+          <div id="wx-app-bg" class="weather-hero-bg"></div>
+
+          <div class="weather-hero-content">
+            <div id="wx-app-icon" class="hero-icon"></div>
+            <div id="wx-app-temp" class="hero-temp">--°</div>
+            <div>
+              <div id="wx-app-place" class="hero-place">Locating…</div>
+              <div id="wx-app-meta" class="hero-meta">—</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- HOURLY FORECAST -->
+        <section class="weather-section">
+          <h2>Next hours</h2>
+          <div id="wx-app-hourly" class="wx-app-scroller"></div>
+        </section>
+
+        <!-- DAILY FORECAST -->
+        <section class="weather-section">
+          <h2>Next days</h2>
+          <div id="wx-app-daily" class="wx-app-daily"></div>
+        </section>
+
+      </main>
+    </div>
+
+    <script src="weather-app.js"></script>
+  </body>
+</html>
