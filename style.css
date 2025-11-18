@@ -1373,3 +1373,92 @@ footer {
     font-size: 40px;
   }
 }
+/* =========================================================
+   MOBILE LAYOUT FIXES (phones only)
+   ======================================================= */
+@media (max-width: 600px) {
+  body {
+    overflow-x: hidden;
+  }
+
+  /* Top bar: shrink + keep inside the screen */
+  .header {
+    margin: 12px auto 6px;
+    padding: 10px 14px;
+    max-width: calc(100% - 24px);
+    border-radius: 22px;
+  }
+
+  .brand img {
+    width: 30px;
+    height: 30px;
+  }
+
+  .brand {
+    font-size: 16px;
+    letter-spacing: 0.08em;
+  }
+
+  .header-right {
+    gap: 8px;
+  }
+
+  .clock {
+    padding: 4px 8px;
+    font-size: 11px;
+  }
+
+  .weather {
+    padding: 4px 9px;
+    font-size: 11px;
+  }
+
+  .theme-toggle {
+    width: 26px;
+    height: 26px;
+  }
+
+  /* Center seal: smaller so it doesn’t cover everything */
+  .seal-center-btn::before {
+    width: 68px;
+    height: 68px;
+  }
+
+  .seal-center-icon {
+    width: 48px;
+    height: 48px;
+  }
+
+  /* Main content spacing */
+  .container {
+    max-width: 100%;
+    padding: 12px 12px 32px;
+    margin: 8px auto 60px;
+  }
+
+  .title {
+    font-size: 24px;
+  }
+
+  .subtitle {
+    font-size: 13px;
+    padding: 0 8px;
+  }
+
+  /* Cards tighter on phones */
+  .cards {
+    gap: 10px;
+  }
+
+  /* Optional: hide side rail on very small screens */
+  .sidenav {
+    display: none;
+  }
+
+  /* Keep ticker inside the viewport */
+  .news-ticker {
+    max-width: calc(100% - 24px);
+    margin-inline: auto;
+  }
+}
+
