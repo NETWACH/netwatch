@@ -10,13 +10,16 @@
 
 function iconFromWeatherCode(code, isDay, cssClass = "weather-anim") {
   const day = !!isDay;
-  const ICON_BASE = ""; // icons in project root
+  const ICON_BASE = "icons/"; // icons live in /icons
 
   const img = (file, alt) =>
     `<img src="${ICON_BASE}${file}" alt="${alt}" class="${cssClass}">`;
 
   if (code === 0) {
-    return img(day ? "day.svg" : "night.svg", day ? "Clear sky" : "Clear night");
+    return img(
+      day ? "day.svg" : "night.svg",
+      day ? "Clear sky" : "Clear night"
+    );
   }
   if (code === 1 || code === 2) {
     return img(
