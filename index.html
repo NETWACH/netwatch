@@ -4,6 +4,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#0b1120" />
+
+    <meta
+      name="congress-api-key"
+      content="0bRfV48WI7suGimw1m6gMy4rYq7NttGg9zXLBABz"
+    />
+
     <title>NetWatch</title>
 
     <link rel="icon" href="logo.png" type="image/png" />
@@ -23,14 +29,15 @@
         <div>
           <strong>Websites use .gov</strong>
           <span class="desc">
-            A .gov website belongs to a government organization in the United States.
+            A .gov website belongs to a government organization in the United
+            States.
           </span>
         </div>
         <div>
           <strong>Secure websites use HTTPS</strong>
           <span class="desc">
-            A lock (🔒) or https:// means you’re safely connected. Share sensitive
-            information only on secure sites.
+            A lock (🔒) or https:// means you’re safely connected. Share
+            sensitive information only on secure sites.
           </span>
         </div>
       </div>
@@ -116,7 +123,11 @@
     </header>
 
     <nav class="sidenav">
-      <button class="sidenav-toggle" aria-label="Expand navigation" title="Expand navigation">
+      <button
+        class="sidenav-toggle"
+        aria-label="Expand navigation"
+        title="Expand navigation"
+      >
         <span class="icon">&raquo;</span>
       </button>
 
@@ -140,9 +151,9 @@
         <span class="icon">📚</span>
         <span class="label">Resources</span>
       </a>
-      
+
       <div class="sidenav-divider"></div>
-      
+
       <a href="#news">
         <span class="icon">🧾</span>
         <span class="label">News</span>
@@ -158,16 +169,83 @@
     </nav>
 
     <main class="container">
-      
       <div id="home-content">
         <h1 class="title">NetWatch</h1>
         <p class="subtitle">
-          A data-driven project to track threats to health safety nets – because it belongs to everyone.
+          A data-driven project to track threats to health safety nets – because
+          it belongs to everyone.
         </p>
       </div>
+    </main>
+    
+    <div id="singlePanelModal" class="modal-wrapper">
+        <div class="modal-backdrop"></div>
+        <div class="congress-modal-window">
+          <button class="panel-close" title="Close panel" aria-label="Close panel">&times;</button>
+          <div id="singlePanelContent" class="modal-content-area">
+            </div>
+        </div>
+    </div>
+    
+    <div id="congressModal">
+        <div class="modal-backdrop"></div>
+        <div class="congress-modal-window">
+          <section class="congress" id="congressContent">
+            <button
+              class="panel-close"
+              title="Close panel"
+              aria-label="Close panel"
+            >
+              &times;
+            </button>
+            <h2>Members of Congress — Live Directory</h2>
 
-      <section class="live-panel content-panel" id="watching">
-        <button class="panel-close" title="Close panel" aria-label="Close panel">&times;</button>
+            <div class="controls">
+              <input
+                id="filterText"
+                type="search"
+                placeholder="Search name, state, party"
+                aria-label="Filter"
+              />
+              <select id="filterChamber" aria-label="Chamber">
+                <option value="">All Chambers</option>
+                <option value="House">House</option>
+                <option value="Senate">Senate</option>
+              </select>
+              <select id="filterState" aria-label="State"></select>
+            </div>
+
+            <div
+              id="congressNote"
+              style="color: var(--muted); font-size: 13px; margin-bottom: 6px"
+            ></div>
+
+            <div style="overflow: auto; flex-grow: 1;">
+              <table id="congressTable" aria-live="polite">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Chamber</th>
+                    <th>State/Dist.</th>
+                    <th>Party</th>
+                    <th>Term Ends</th>
+                    <th>Days Left</th>
+                    <th>Profile</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td colspan="7" style="color: var(--muted)">Loading…</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+      </div>
+
+    <div style="display: none;">
+      <section class="live-panel" id="watching-content">
         <h2>What We’re Watching</h2>
         <div class="cards">
           <div class="card">
@@ -189,59 +267,12 @@
         </div>
       </section>
 
-      <section class="live-panel content-panel" id="market-panel">
-        <button class="panel-close" title="Close panel" aria-label="Close panel">&times;</button>
+      <section class="live-panel" id="market-panel-content">
         <h2>Livestock Market</h2>
         <div id="market">Loading…</div>
       </section>
 
-      <section class="congress content-panel" id="congress">
-        <button class="panel-close" title="Close panel" aria-label="Close panel">&times;</button>
-        <h2>Members of Congress — Live Directory</h2>
-        <div class="controls">
-          <input
-            id="filterText"
-            type="search"
-            placeholder="Search name, state, party"
-            aria-label="Filter"
-          />
-          <select id="filterChamber" aria-label="Chamber">
-            <option value="">All Chambers</option>
-            <option value="House">House</option>
-            <option value="Senate">Senate</option>
-          </select>
-          <select id="filterState" aria-label="State"></select>
-        </div>
-
-        <div
-          id="congressNote"
-          style="color: var(--muted); font-size: 13px; margin-bottom: 6px"
-        ></div>
-
-        <div style="overflow: auto">
-          <table id="congressTable" aria-live="polite">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Chamber</th>
-                <th>State/Dist.</th>
-                <th>Party</th>
-                <th>Term Ends</th>
-                <th>Days Left</th>
-                <th>Profile</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td colspan="7" style="color: var(--muted)">Loading…</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      <section class="links content-panel" id="resources">
-        <button class="panel-close" title="Close panel" aria-label="Close panel">&times;</button>
+      <section class="links" id="resources-content">
         <div class="block">
           <h3>Federal Agencies</h3>
           <a href="https://www.cms.gov/" target="_blank">CMS</a>
@@ -258,7 +289,23 @@
           <a href="https://www.govinfo.gov/" target="_blank">GovInfo</a>
         </div>
       </section>
-    </main>
+      
+      <section class="live-panel" id="news-content">
+        <h2>News</h2>
+        <p>Real-time policy updates and analyses related to social safety nets will be displayed here.</p>
+      </section>
+      
+      <section class="live-panel" id="medicaid-content">
+        <h2>Medicaid Tracker</h2>
+        <p>In-depth statistics and legislative tracking for Medicaid funding and eligibility.</p>
+      </section>
+
+      <section class="live-panel" id="social-security-content">
+        <h2>Social Security Watch</h2>
+        <p>Tracked proposals and financial stability reports for Social Security programs.</p>
+      </section>
+
+    </div>
 
     <footer>
       © <span id="year"></span> NetWatch • Atlanta, GA 30303
@@ -269,116 +316,28 @@
     <script src="market.js"></script>
 
     <script>
-      /* Congress API Loader */
-      async function buildCongress() {
-        const key =
-          (document.querySelector('meta[name="congress-api-key"]') || {})
-            .content;
-        const note = document.getElementById("congressNote");
-        const tbody = document.querySelector("#congressTable tbody");
-        const congressNumber = 119;
-        if (!tbody) return;
-        let members = [];
+      /* ---------- Clock Update ---------- */
+      function setNow(){
+        const y = document.getElementById('year');
+        if (y) y.textContent = new Date().getFullYear();
 
-        if (key) {
-          try {
-            const url = `https://api.congress.gov/v3/member/congress/${congressNumber}?currentMember=true&limit=250&format=json&api_key=${key}`;
-            const resp = await fetch(url);
-            if (resp.ok) {
-              const json = await resp.json();
-              members = (json.members || []).map((m) => ({
-                name: m.fullName,
-                chamber: m.chamber,
-                state: m.state + (m.district ? `-${m.district}` : ""),
-                party: m.party,
-                end: m.endDate,
-                url: m.url,
-              }));
-            }
-          } catch (e) {
-            console.error(e);
-          }
-        }
-
-        if (!members.length) {
-          if (note) {
-            note.innerHTML =
-              'Add your Congress.gov API key in <code>&lt;meta name="congress-api-key"&gt;</code> for live updates. For now, use official directories: <a href="https://www.senate.gov/senators/" target="_blank" rel="noopener">Senators</a> · <a href="https://www.house.gov/representatives" target="_blank" rel="noopener">Representatives</a>.';
-          }
-          tbody.innerHTML =
-            '<tr><td colspan="7" style="color:var(--muted)">No live data loaded.</td></tr>';
-          return;
-        }
-
-        const stateSelect = document.getElementById("filterState");
-        const states = [...new Set(members.map((m) => m.state.split("-")[0]))]
-          .sort()
-          .filter(Boolean);
-
-        if (stateSelect) {
-          stateSelect.innerHTML =
-            '<option value="">All States</option>' +
-            states.map((s) => `<option value="${s}">${s}</option>`).join("");
-        }
-
-        tbody.innerHTML = members
-          .map((m) => {
-            const end = m.end ? new Date(m.end) : null;
-            const today = new Date();
-            const daysLeft = end
-              ? Math.ceil((end - today) / 86400000)
-              : "";
-            return `<tr>
-              <td>${m.name}</td>
-              <td>${m.chamber}</td>
-              <td>${m.state}</td>
-              <td>${m.party}</td>
-              <td>${m.end ? new Date(m.end).toLocaleDateString() : ""}</td>
-              <td>${daysLeft}</td>
-              <td><a href="${m.url}" target="_blank" rel="noopener">Profile ↗</a></td>
-            </tr>`;
-          })
-          .join("");
+        // Using Denver time zone as before, but ensure clock updates every second
+        const tz = 'America/Denver';
+        const clock = document.getElementById('clock');
+        const tf = new Intl.DateTimeFormat('en-US', {timeZone: tz, hour: 'numeric', minute: '2-digit', second: '2-digit', hour12: true});
+        
+        const tick = () => { if (clock) clock.textContent = tf.format(new Date()); };
+        tick(); 
+        setInterval(tick, 1000);
       }
+      
+      /* ---------- Congress API Loader ---------- */
+      // Logic moved to app.js
 
-      /* Congress filters */
-      function initFilters() {
-        const tbody = document.querySelector("#congressTable tbody");
-        const filterText = document.getElementById("filterText");
-        const filterChamber = document.getElementById("filterChamber");
-        const filterState = document.getElementById("filterState");
-        if (!tbody) return;
+      /* ---------- Congress filters ---------- */
+      // Logic moved to app.js
 
-        const apply = () => {
-          const q = (filterText.value || "").toLowerCase();
-          const ch = filterChamber.value;
-          const st = filterState.value;
-
-          for (const tr of tbody.querySelectorAll("tr")) {
-            const name = tr.children[0].textContent.toLowerCase();
-            const chamber = tr.children[1].textContent;
-            const state = tr.children[2].textContent;
-            const party = tr.children[3].textContent.toLowerCase();
-
-            const matchesText =
-              !q ||
-              name.includes(q) ||
-              party.includes(q) ||
-              state.toLowerCase().includes(q);
-            const matchesChamber = !ch || chamber === ch;
-            const matchesState = !st || state.startsWith(st);
-
-            tr.style.display =
-              matchesText && matchesChamber && matchesState ? "" : "none";
-          }
-        };
-
-        if (filterText) filterText.addEventListener("input", apply);
-        if (filterChamber) filterChamber.addEventListener("change", apply);
-        if (filterState) filterState.addEventListener("change", apply);
-      }
-
-      /* Theme toggle */
+      /* ---------- Theme toggle ---------- */
       function initThemeToggle() {
         const root = document.documentElement;
         const btn = document.getElementById("themeToggle");
@@ -396,7 +355,7 @@
         });
       }
 
-      /* Executive Tracker toggle (seal dropdown) */
+      /* ---------- Executive Tracker toggle ---------- */
       function initExecToggle() {
         const btn = document.getElementById("execBtn");
         const panel = document.getElementById("execPanel");
@@ -428,69 +387,38 @@
           }
         });
       }
-      
-      /* --- NEW: PANEL NAVIGATION LOGIC --- */
-      function initPanelNavigation() {
-        const nav = document.querySelector('.sidenav');
-        const homeContent = document.getElementById('home-content');
-        const panels = document.querySelectorAll('.content-panel');
-        const closeButtons = document.querySelectorAll('.panel-close');
 
-        // Function to show the home content
+      /* ---------- Panel navigation (side/bottom nav) ---------- */
+      function initPanelNavigation() {
+        const nav = document.querySelector(".sidenav");
+        const homeContent = document.getElementById("home-content");
+        
         const showHome = () => {
-          homeContent.style.display = 'block';
-          panels.forEach(p => p.style.display = 'none');
+          homeContent.style.display = "block";
+          document.getElementById('singlePanelModal').classList.remove('open');
+          document.getElementById('congressModal').classList.remove('open');
         };
 
-        // Handle clicks on sidebar links
-        nav.addEventListener('click', (e) => {
-          const link = e.target.closest('a');
-          if (!link) return; // Not a link
-          
-          const href = link.getAttribute('href');
-          
-          // Stop if it's not a panel link
-          if (!href || href.charAt(0) !== '#') return;
-          
-          e.preventDefault(); // Stop default anchor jump
-          
-          // Hide home and all panels
-          homeContent.style.display = 'none';
-          panels.forEach(p => p.style.display = 'none');
-          
-          if (href === '#home') {
-            showHome();
-          } else {
-            // Show the one matching panel
-            const targetPanel = document.querySelector(href);
-            if (targetPanel) {
-              targetPanel.style.display = 'block';
-            }
-          }
-        });
-
-        // Handle clicks on all close buttons
-        closeButtons.forEach(btn => {
-          btn.addEventListener('click', (e) => {
-            e.preventDefault();
-            showHome();
-          });
-        });
+        // Close button logic for single panel modal
+        document.querySelector('#singlePanelModal .panel-close').addEventListener('click', showHome);
+        document.querySelector('#singlePanelModal .modal-backdrop').addEventListener('click', showHome);
         
-        // Default to home view
+        // start on Home
         showHome();
       }
-      /* --- END NEW SCRIPT --- */
 
+      /* ---------- On page load ---------- */
       document.addEventListener("DOMContentLoaded", () => {
-        buildCongress();
-        initFilters();
+        setNow(); // Initialize the clock
         document.getElementById("year").textContent =
           new Date().getFullYear();
         initThemeToggle();
         initExecToggle();
-        initPanelNavigation(); // <-- Initialize the new logic
+        initPanelNavigation();
+        
+        // This function is defined in app.js and handles the new modal logic
+        if (typeof initPanelModals === 'function') {
+            initPanelModals();
+        }
       });
     </script>
-  </body>
-</html>
