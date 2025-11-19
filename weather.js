@@ -11,14 +11,18 @@
 
 function iconFromWeatherCode(code, isDay, cssClass = "weather-anim") {
   const day = !!isDay;
-  const ICON_BASE = ""; // icons live in the project root
+  const ICON_BASE = "icons/"; // icons live in /icons
 
   const img = (file, alt) =>
     `<img src="${ICON_BASE}${file}" alt="${alt}" class="${cssClass}">`;
 
-  if (code === 0) return img(day ? "day.svg" : "night.svg", day ? "Clear sky" : "Clear night");
+  if (code === 0)
+    return img(day ? "day.svg" : "night.svg", day ? "Clear sky" : "Clear night");
   if (code === 1 || code === 2)
-    return img(day ? "cloudy-day-1.svg" : "cloudy-night-1.svg", "Partly cloudy");
+    return img(
+      day ? "cloudy-day-1.svg" : "cloudy-night-1.svg",
+      "Partly cloudy"
+    );
   if (code === 3) return img("cloudy.svg", "Overcast");
   if (code >= 45 && code <= 48) return img("cloudy.svg", "Fog");
   if (code >= 51 && code <= 57) return img("rainy-1.svg", "Drizzle");
@@ -194,9 +198,9 @@ async function fetchWeather(lat, lon, unit, labelHint) {
               tempUnit === "celsius" ? "°C" : "°F"
             }</div>
             <div class="t">${it.pop ?? 0}% • ${iconFromWeatherCode(
-            it.code,
-            1
-          )}</div>
+              it.code,
+              1
+            )}</div>
           </div>`
         )
         .join("");
@@ -234,9 +238,9 @@ async function fetchWeather(lat, lon, unit, labelHint) {
 function initWeather() {
   // Hard fallback if everything else fails – now Atlanta, GA
   const fallback = {
-    lat: 33.7490,          // Atlanta latitude
-    lon: -84.3880,         // Atlanta longitude
-    label: "Atlanta, GA",  // what will show in the pill when falling back
+    lat: 33.7490, // Atlanta latitude
+    lon: -84.3880, // Atlanta longitude
+    label: "Atlanta, GA", // what will show in the pill when falling back
   };
 
   const panel = document.getElementById("weatherPanel");
@@ -309,6 +313,5 @@ function initWeather() {
   // Periodic refresh
   setInterval(refresh, 10 * 60 * 1000);
 }
-
 
 document.addEventListener("DOMContentLoaded", initWeather);
