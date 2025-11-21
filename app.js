@@ -5,7 +5,7 @@ async function buildCongress() {
   if (!tbody) return;
 
   const DRIVE_API_URL =
-    "https://script.google.com/macros/s/AKfycby_w0AbRiUVYipLMUiK8G5fYQRs5X5qOxaqJGtnUYrntXgOC9ey5DlU9ztwwcX3f3wdLw/exec";
+  "https://raw.githubusercontent.com/netwach/netwatch/main/congress.json";
 
   let members = [];
 
