@@ -1,12 +1,12 @@
 {
   "members": [
     {
-      "fullName": "E",
+      "fullName": "Pending",
       "chamber": "Pending",
-      "state": "MA",
-      "party": "D",
-      "endDate": "2027-01-03",
-      "url": "https://www.warren.senate.gov/"
+      "state": "?",
+      "party": "?",
+      "endDate": "00/00/0000",
+      "url": "#"
     },
     {
       "fullName": "Thom Tillis",
