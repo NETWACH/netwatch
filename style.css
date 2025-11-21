@@ -1420,30 +1420,27 @@ footer {
   }
 
   /* Seal as floating button (top-right) */
+@media (max-width: 600px) {
+
   .seal-center-btn {
-    position: fixed;
-    top: 16px;
-    right: 14px;
-    left: auto;
-    transform: translateX(0);
-    background: none;
-    border: none;
-    padding: 0;
-    cursor: pointer;
-    z-index: 60;
-    transition: transform 220ms ease-out, right 220ms ease-out;
+    position: fixed !important;
+    top: 18px !important;
+    right: 14px !important;
+
+    width: 40px !important;
+    height: 40px !important;
   }
 
   .seal-center-btn::before {
-    width: 50px;
-    height: 50px;
-    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.45);
+    width: 50px !important;
+    height: 50px !important;
   }
 
   .seal-center-icon {
-    width: 34px;
-    height: 34px;
+    width: 32px !important;
+    height: 32px !important;
   }
+}
 
   body.exec-open-mobile .seal-center-btn {
     transform: translateX(-80px);
