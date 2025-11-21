@@ -1826,3 +1826,20 @@ footer {
     transform: scale(1);
   }
 }
+/* === Move sidenav arrow button to bottom & enable swipe === */
+
+/* Allow the vertical rail to scroll/swipe */
+.sidenav {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;                 /* enables swipe on mobile + scroll on desktop */
+  -webkit-overflow-scrolling: touch;/* smooth iOS scrolling */
+  touch-action: pan-y;              /* makes swipe gestures work */
+}
+
+/* Move the blue arrow toggle to the bottom of the rail */
+.sidenav-toggle {
+  order: 99;                        /* forces it to the bottom */
+  margin-top: 8px;
+  margin-bottom: 0;
+}
