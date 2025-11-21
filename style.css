@@ -1917,9 +1917,9 @@ footer {
     display: none;
   }
 
-  /* "SWIPE FOR APPS »" with moving silver light, iPhone-style */
+  /* "<< SWIPE FOR APPS <<" with moving silver light, iPhone-style */
   .sidenav::after {
-    content: "SWIPE FOR APPS  »";
+    content: "<< SWIPE FOR APPS << ";
     position: absolute;
     right: 16px;
     top: 50%;
