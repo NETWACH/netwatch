@@ -2050,3 +2050,125 @@ footer {
     display: none; /* icons only in the dock */
   }
 }
+/* =========================================================
+   iPhone-style SWIPE FOR APPS dock
+   - centered text
+   - arrows both directions
+   - center-out silver glow
+   - pill glow matches the clock
+   ========================================================= */
+
+@keyframes swipe-center-glow {
+  0% {
+    background-size: 0% 100%;
+    opacity: 0.25;
+  }
+  50% {
+    background-size: 220% 100%;
+    opacity: 1;
+  }
+  100% {
+    background-size: 0% 100%;
+    opacity: 0.25;
+  }
+}
+
+@media (max-width: 720px) {
+
+  /* Glass pill dock — same vibe as the clock/weather pills */
+  .sidenav {
+    position: fixed !important;
+    left: 50% !important;
+    bottom: 12px !important;
+    top: auto !important;
+    transform: translateX(-50%) !important;
+    right: auto !important;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+
+    padding: 10px 20px;
+    max-width: 420px;
+    width: 92%;
+    border-radius: 999px;
+
+    background: transparent;
+    border: none;
+    overflow: hidden;
+
+    z-index: 1000;
+  }
+
+  /* Glow shell behind the pill (clock-style glass) */
+  .sidenav::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+
+    background:
+      radial-gradient(circle at 20% 0%, rgba(125, 211, 252, 0.45), transparent 55%),
+      radial-gradient(circle at 80% 100%, rgba(56, 189, 248, 0.4), transparent 55%),
+      rgba(15, 23, 42, 0.97);
+
+    box-shadow:
+      0 16px 40px rgba(15, 23, 42, 0.95),
+      0 0 30px rgba(56, 189, 248, 0.55);
+
+    border: 1px solid rgba(148, 163, 184, 0.85);
+    backdrop-filter: blur(20px) saturate(185%);
+    -webkit-backdrop-filter: blur(20px) saturate(185%);
+
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  /* Centered "« SWIPE FOR APPS »" with center-out silver glow */
+  .sidenav::after {
+    content: "«  SWIPE FOR APPS  »";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    width: 100%;
+    text-align: center;
+    pointer-events: none;
+
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+
+    background: linear-gradient(
+      90deg,
+      rgba(148, 163, 184, 0.1),
+      rgba(249, 250, 251, 1),
+      rgba(148, 163, 184, 0.1)
+    );
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+    background-size: 0% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+
+    animation: swipe-center-glow 2.4s ease-in-out infinite;
+  }
+
+  /* Make sure the old mobile cues/arrows don't interfere */
+  .sidenav-toggle {
+    display: none !important;
+  }
+  .sidenav-divider {
+    display: none;
+  }
+
+  /* Keep your app icons usable – they sit on top of the glass shell */
+  .sidenav a {
+    position: relative;
+    z-index: 1;
+  }
+}
