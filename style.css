@@ -1422,7 +1422,7 @@ footer {
   /* Seal as floating button (top-right) */
   .seal-center-btn {
     position: fixed;
-    top: 82px;
+    top: 16px;
     right: 14px;
     left: auto;
     transform: translateX(0);
@@ -1435,14 +1435,14 @@ footer {
   }
 
   .seal-center-btn::before {
-    width: 62px;
-    height: 62px;
-    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.45);
+    width: 50px;
+    height: 50px;
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.45);
   }
 
   .seal-center-icon {
-    width: 44px;
-    height: 44px;
+    width: 34px;
+    height: 34px;
   }
 
   body.exec-open-mobile .seal-center-btn {
