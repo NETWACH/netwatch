@@ -1,9 +1,11 @@
+// --- Congress directory (Google Apps Script JSON) ---
 async function buildCongress() {
   const note = document.getElementById("congressNote");
   const tbody = document.querySelector("#congressTable tbody");
   if (!tbody) return;
 
- const DRIVE_API_URL = "https://script.google.com/macros/s/AKfycby_w0AbRiUVYipLMUiK8G5fYQRs5X5qOxaqJGtnUYrntXgOC9ey5DlU9ztwwcX3f3wdLw/exec";
+  const DRIVE_API_URL =
+    "https://script.google.com/macros/s/AKfycby_w0AbRiUVYipLMUiK8G5fYQRs5X5qOxaqJGtnUYrntXgOC9ey5DlU9ztwwcX3f3wdLw/exec";
 
   let members = [];
 
@@ -28,6 +30,7 @@ async function buildCongress() {
 
   if (!members.length) {
     tbody.innerHTML = `<tr><td colspan="7" style="color:var(--muted)">No live data loaded.</td></tr>`;
+    const note = document.getElementById("congressNote");
     if (note) {
       note.innerHTML =
         "Could not load members from the Google Drive JSON API. Check that your Apps Script web app URL is correct and shared as 'Anyone with the link'.";
@@ -37,9 +40,11 @@ async function buildCongress() {
 
   const stateSelect = document.getElementById("filterState");
   const states = [...new Set(members.map((m) => m.state.split("-")[0]))].sort();
-  stateSelect.innerHTML =
-    `<option value="">All States</option>` +
-    states.map((s) => `<option value="${s}">${s}</option>`).join("");
+  if (stateSelect) {
+    stateSelect.innerHTML =
+      `<option value="">All States</option>` +
+      states.map((s) => `<option value="${s}">${s}</option>`).join("");
+  }
 
   const today = new Date();
   tbody.innerHTML = members
@@ -61,7 +66,7 @@ async function buildCongress() {
           <td>${m.party}</td>
           <td>${m.end ? new Date(m.end).toLocaleDateString() : ""}</td>
           <td class="${cls}">${daysLeft}</td>
-          <td><a href="${m.url}" target="_blank">Profile ↗</a></td>
+          <td><a href="${m.url}" target="_blank" rel="noopener">Profile ↗</a></td>
         </tr>`;
     })
     .join("");
@@ -94,12 +99,78 @@ async function buildCongress() {
     }
   };
 
-  filterText.addEventListener("input", applyFilter);
-  filterChamber.addEventListener("change", applyFilter);
-  stateSelect.addEventListener("change", applyFilter);
+  if (filterText) filterText.addEventListener("input", applyFilter);
+  if (filterChamber) filterChamber.addEventListener("change", applyFilter);
+  if (stateSelect) stateSelect.addEventListener("change", applyFilter);
 }
 
-window.addEventListener("DOMContentLoaded", () => {
-  buildCongress();
-});
+// --- Year, Clock, Last Update ---
+function setNow() {
+  const yearSpan = document.getElementById("year");
+  if (yearSpan) yearSpan.textContent = new Date().getFullYear();
 
+  const clockEl = document.getElementById("clock");
+  const lastUpdate = document.getElementById("last-update");
+  const tz = "America/Denver";
+
+  const clockFmt = new Intl.DateTimeFormat("en-US", {
+    timeZone: tz,
+    hour: "numeric",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: true,
+  });
+
+  const dateFmt = new Intl.DateTimeFormat("en-US", {
+    timeZone: tz,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  });
+
+  const tick = () => {
+    if (clockEl) clockEl.textContent = clockFmt.format(new Date());
+  };
+
+  tick();
+  setInterval(tick, 1000);
+
+  if (lastUpdate) lastUpdate.textContent = dateFmt.format(new Date());
+}
+
+// --- Simple stubs / helpers so nothing crashes ---
+function spinSeal() {
+  // you can add animation later if you want
+}
+
+function initGovBanner() {
+  const toggle = document.getElementById("gov-toggle");
+  const info = document.getElementById("gov-info");
+  if (!toggle || !info) return;
+
+  toggle.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    info.classList.toggle("show");
+  });
+
+  document.addEventListener("click", (e) => {
+    if (!info.contains(e.target) && e.target !== toggle) {
+      info.classList.remove("show");
+    }
+  });
+}
+
+function initApprovalChart() {
+  // placeholder – no chart yet
+}
+
+// --- Init on page load ---
+window.addEventListener("DOMContentLoaded", () => {
+  setNow();                         // ⏰ clock + year + last update
+  spinSeal();                       // (no-op for now)
+  initGovBanner();                  // gov banner toggle
+  initApprovalChart();              // (no-op)
+  if (typeof initWeather === "function") initWeather(); // from weather.js
+  buildCongress();                  // load your JSON from Apps Script
+});
