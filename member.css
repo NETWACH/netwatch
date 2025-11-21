@@ -1,0 +1,266 @@
+:root {
+  --primary: #2563eb;
+  --muted: #9ca3af;
+  --bg-dark-highlight: rgba(15, 23, 42, .9);
+  --text-light: #e5e7eb;
+  --border-light: rgba(148, 163, 184, .15);
+}
+
+/* --- Layout --- */
+.member-shell {
+  max-width: 1200px;
+  margin: 32px auto;
+  padding: 0 16px 40px;
+}
+
+.member-grid {
+  margin-top: 24px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 2fr);
+  gap: 20px;
+}
+
+@media (max-width: 900px) {
+  .member-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* --- Header --- */
+.member-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.member-header-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.member-header-meta {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.header-right {
+  text-align: right;
+  font-size: 12px;
+}
+
+.member-nav-link {
+  font-size: 12px;
+  color: #93c5fd;
+  text-decoration: none;
+}
+
+/* --- Typography & Utilities --- */
+.section-label {
+  font-size: 12px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+
+.text-right { text-align: right; }
+.mt-small { margin-top: 4px; }
+.mt-medium { margin-top: 16px; }
+
+/* --- Profile Components --- */
+.profile-card-main {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 12px;
+}
+
+.avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 999px;
+  background: radial-gradient(circle at 30% 20%, #38bdf8, #1d4ed8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: var(--text-light);
+  box-shadow: 0 0 0 2px var(--bg-dark-highlight), 0 12px 40px rgba(0, 0, 0, 0.7);
+  font-size: 20px;
+}
+
+.profile-name { font-size: 16px; font-weight: 600; }
+.profile-email { font-size: 13px; color: var(--muted); }
+
+.profile-meta-row {
+  font-size: 12px;
+  color: var(--muted);
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+}
+
+.pill-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  background: var(--bg-dark-highlight);
+  border: 1px solid rgba(34, 197, 94, .7);
+  color: #bbf7d0;
+}
+
+.pill-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: #22c55e;
+}
+
+/* --- Buttons --- */
+.profile-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.btn-ghost, .btn-primary {
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 12px;
+  border: 1px solid rgba(148, 163, 184, .6);
+  background: transparent;
+  color: var(--text-light);
+  cursor: pointer;
+}
+
+.btn-primary {
+  border-color: var(--primary);
+  background: var(--primary);
+  font-weight: 600;
+}
+
+/* --- Bank / Sparkline --- */
+.coming-soon-card { margin-top: 16px; }
+.card-flex-header { display: flex; justify-content: space-between; align-items: center; }
+.bank-title { font-size: 14px; font-weight: 600; }
+.bank-desc { font-size: 12px; color: var(--muted); }
+
+.coming-soon-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: 999px;
+  padding: 3px 10px;
+  font-size: 11px;
+  background: rgba(30, 64, 175, .9);
+  border: 1px solid rgba(129, 140, 248, .9);
+  color: #e0f2fe;
+}
+
+.sparkline {
+  margin-top: 12px;
+  height: 56px;
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.sparkline-bar {
+  flex: 1;
+  border-radius: 999px;
+  background: linear-gradient(to top, #1d4ed8, #38bdf8);
+  opacity: .3;
+}
+
+.sparkline-bar.highlight {
+  opacity: 1;
+  box-shadow: 0 0 20px rgba(56, 189, 248, .9);
+}
+
+.sparkline-caption {
+  margin-top: 8px;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+/* --- Plans & Addons --- */
+.plan-details {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.plan-name { font-size: 15px; font-weight: 600; }
+.plan-price { font-size: 20px; font-weight: 700; }
+.plan-meta { font-size: 12px; color: var(--muted); }
+
+.addons-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.addons-list li {
+  padding: 10px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border-light);
+  font-size: 13px;
+}
+
+.addons-list li:last-child { border-bottom: none; }
+
+/* --- History Table --- */
+.history-table { margin-top: 8px; font-size: 12px; }
+
+.history-header, .history-row {
+  display: grid;
+  grid-template-columns: 1.1fr 1.3fr .7fr .9fr;
+  gap: 8px;
+  padding: 6px 0;
+}
+
+.history-header {
+  border-bottom: 1px solid rgba(148, 163, 184, .35);
+  color: var(--muted);
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: .12em;
+}
+
+.history-row { border-bottom: 1px solid var(--border-light); }
+.history-row:last-child { border-bottom: none; }
+
+.history-amount {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.history-amount.negative { color: #f97373; }
+.history-amount.positive { color: #4ade80; }
+
+/* --- Javascript Status States --- */
+.pill-status.status-active {
+  border-color: rgba(34, 197, 94, .7);
+  color: #bbf7d0;
+}
+.pill-status.status-active .pill-dot { background: #22c55e; }
+
+.pill-status.status-warning {
+  border-color: #f97316;
+  color: #fed7aa;
+}
+.pill-status.status-warning .pill-dot { background: #f97316; }
+
+.pill-status.status-danger {
+  border-color: #ef4444;
+  color: #fecaca;
+}
+.pill-status.status-danger .pill-dot { background: #ef4444; }
