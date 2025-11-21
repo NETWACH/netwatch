@@ -3,42 +3,42 @@
     {
       "fullName": "Pending",
       "chamber": "Pending",
-      "state": "?",
-      "party": "?",
-      "endDate": "00/00/0000",
-      "url": "#"
+      "state": "",
+      "party": "",
+      "endDate": "00-00-0000",
+      "url": ""
     },
     {
-      "fullName": "Thom Tillis",
-      "chamber": "Senate",
-      "state": "NC",
-      "party": "R",
-      "endDate": "2027-01-03",
-      "url": "https://www.tillis.senate.gov/"
+      "fullName": "Pending",
+      "chamber": "Pending",
+      "state": "",
+      "party": "",
+      "endDate": "00-00-0000",
+      "url": ""
     },
     {
-      "fullName": "Alexandria Ocasio-Cortez",
-      "chamber": "House",
-      "state": "NY-14",
-      "party": "D",
-      "endDate": "2025-01-03",
-      "url": "https://ocasio-cortez.house.gov/"
+      "fullName": "Pending",
+      "chamber": "Pending",
+      "state": "",
+      "party": "",
+      "endDate": "00-00-0000",
+      "url": ""
     },
     {
-      "fullName": "Elise M. Stefanik",
-      "chamber": "House",
-      "state": "NY-21",
-      "party": "R",
-      "endDate": "2025-01-03",
-      "url": "https://stefanik.house.gov/"
+      "fullName": "Pending",
+      "chamber": "Pending",
+      "state": "",
+      "party": "",
+      "endDate": "00-00-0000",
+      "url": ""
     },
     {
-      "fullName": "Joe Manchin III",
-      "chamber": "Senate",
-      "state": "WV",
-      "party": "D",
-      "endDate": "2025-01-03",
-      "url": "https://www.manchin.senate.gov/"
+      "fullName": "Pending",
+      "chamber": "Pending",
+      "state": "",
+      "party": "",
+      "endDate": "",
+      "url": ""
     }
   ]
 }
