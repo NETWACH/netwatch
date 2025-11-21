@@ -100,10 +100,6 @@ async function buildCongress() {
 }
 
 window.addEventListener("DOMContentLoaded", () => {
-  setNow();
-  spinSeal();
-  initGovBanner();
-  initApprovalChart();
-  if (typeof initWeather === "function") initWeather();
   buildCongress();
 });
+
