@@ -165,17 +165,30 @@ body::before {
   margin: 16px auto 8px;
   max-width: 1120px;
   padding: 16px 22px;
+
   position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: linear-gradient(
-    135deg,
-    rgba(20, 30, 61, 0.98),
-    rgba(15, 23, 42, 0.96)
-  );
-  border-radius: var(--radius-xl);
+
+  /* NEW: silver-ish glass border like weather, but non-moving */
+  background:
+    radial-gradient(circle at 10% 0%, rgba(125, 211, 252, 0.30), transparent 55%),
+    radial-gradient(circle at 90% 100%, rgba(56, 189, 248, 0.28), transparent 60%),
+    rgba(15, 23, 42, 0.92);  
+
+  border-radius: 28px;
+  border: 2px solid rgba(200, 220, 255, 0.55);  /* glassy silver edge */
+  box-shadow:
+    0 12px 34px rgba(15, 23, 42, 0.75),
+    0 0 24px rgba(56, 189, 248, 0.22);  /* subtle sci-fi blue glow */
+
+  backdrop-filter: blur(26px) saturate(185%);
+  -webkit-backdrop-filter: blur(26px) saturate(185%);
+
   z-index: 50;
+}
+
 }
 
 .brand {
@@ -210,42 +223,157 @@ body::before {
   gap: 14px;
 }
 
-/* --- CLOCK (Gold Static Ring) --- */
+/* =========================================================
+   TECHY SKY-BLUE GLASS CLOCK + SHARED SILVER CHASE RING
+   ========================================================= */
+
+/* --- CLOCK (Sky-Blue Glass Pill) --- */
 .clock {
   position: relative;
-  font-variant-numeric: tabular-nums;
-  color: #e5e7eb;
-  font-size: 13px;
-  padding: 6px 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 6px 16px;
+  min-width: 118px; /* enough for 12:34:56 PM */
   border-radius: 999px;
-  background: rgba(15, 23, 42, 0.7);
-  border: 1px solid rgba(148, 163, 184, 0.4);
-  /* Static gold ring/glow remains */
-  box-shadow: 0 0 0 1.5px var(--warning), 0 0 8px rgba(0, 0, 0, 0.5); 
-  overflow: hidden; 
+
+  font-variant-numeric: tabular-nums;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", system-ui,
+    sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-size: 0.95rem;
+
+  color: #e5f2ff; /* sky-blue/white digits */
+  background: transparent;
+  overflow: hidden;
+  z-index: 0;
 }
 
-/* Keyframes for the Clock's gold glow ring effect (not currently animated on the element) */
-@keyframes clock-ring-spin {
-  0% {
-    box-shadow: 
-        0 0 0 1.5px var(--warning), 
-        0 0 10px rgba(255, 215, 0, 0.6);
-    transform: rotate(0deg) scale(1);
-  }
-  50% {
-    box-shadow: 
-        0 0 0 1.5px rgba(255, 215, 0, 0.3), 
-        0 0 5px rgba(255, 215, 0, 0.3);
-  }
-  100% {
-    box-shadow: 
-        0 0 0 1.5px var(--warning),
-        0 0 10px rgba(255, 215, 0, 0.6);
-    transform: rotate(360deg) scale(1.02);
-  }
+/* shared rotating silver ring (used by clock + weather) */
+.clock::before {
+  content: "";
+  position: absolute;
+  inset: -2px; /* slightly larger than pill */
+  border-radius: inherit;
+  background: conic-gradient(
+    from 0deg,
+    rgba(255, 255, 255, 0),
+    rgba(229, 231, 235, 0.4),
+    #f9fafb,
+    rgba(148, 163, 184, 0.8),
+    rgba(255, 255, 255, 0)
+  );
+  animation: silver-chase 8s linear infinite;
+  pointer-events: none;
+  z-index: -2;
 }
 
+/* inner glass core for clock */
+.clock::after {
+  content: "";
+  position: absolute;
+  inset: 2px;
+  border-radius: inherit;
+  background:
+    radial-gradient(circle at 20% 0%, rgba(125, 211, 252, 0.55), transparent 55%),
+    radial-gradient(circle at 80% 100%, rgba(56, 189, 248, 0.45), transparent 55%),
+    rgba(15, 23, 42, 0.96);
+  box-shadow:
+    0 14px 30px rgba(15, 23, 42, 0.9),
+    0 0 24px rgba(56, 189, 248, 0.45);
+  backdrop-filter: blur(var(--blur-soft)) saturate(190%);
+  -webkit-backdrop-filter: blur(var(--blur-soft)) saturate(190%);
+  border: 1px solid rgba(148, 163, 184, 0.7);
+  pointer-events: none;
+  z-index: -1;
+}
+
+:root[data-theme="dark"] .clock {
+  color: #e0f2fe;
+}
+
+/* --- WEATHER (Techy Glass Pill with same silver ring) --- */
+.weather {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+
+  padding: 6px 14px;
+  border-radius: 999px;
+
+  font-size: 13px;
+  color: #e5e7eb;
+  background: transparent;
+  overflow: hidden;
+  z-index: 0;
+
+  transition: transform 120ms ease-out, filter 150ms ease-out;
+}
+
+/* rotating silver ring, same effect as clock but slightly slower */
+.weather::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  background: conic-gradient(
+    from 40deg,
+    rgba(255, 255, 255, 0),
+    rgba(229, 231, 235, 0.5),
+    #f9fafb,
+    rgba(148, 163, 184, 0.85),
+    rgba(255, 255, 255, 0)
+  );
+  animation: silver-chase 10s linear infinite;
+  pointer-events: none;
+  z-index: -2;
+}
+
+/* inner glass for weather */
+.weather::after {
+  content: "";
+  position: absolute;
+  inset: 2px;
+  border-radius: inherit;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(129, 230, 217, 0.45), transparent 60%),
+    radial-gradient(circle at 100% 100%, rgba(56, 189, 248, 0.5), transparent 65%),
+    rgba(15, 23, 42, 0.96);
+  box-shadow:
+    0 14px 30px rgba(15, 23, 42, 0.9),
+    0 0 26px rgba(56, 189, 248, 0.5);
+  backdrop-filter: blur(var(--blur-soft)) saturate(185%);
+  -webkit-backdrop-filter: blur(var(--blur-soft)) saturate(185%);
+  border: 1px solid rgba(148, 163, 184, 0.75);
+  pointer-events: none;
+  z-index: -1;
+}
+
+.weather:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.05);
+}
+
+/* keep inner content above glass layers */
+.weather > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* shared rotating animation */
+@keyframes silver-chase {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
 
 /* Theme toggle */
 .theme-toggle {
@@ -274,57 +402,7 @@ body::before {
   border-color: #bfdbfe;
 }
 
-/* --- WEATHER (Silver Dynamic Island/Glass) --- */
-.weather {
-  /* Existing styles */
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  color: #e5e7eb;
-  font-size: 13px;
-  cursor: pointer;
-  
-  /* Blended transparent background for glass effect */
-  background: rgba(15, 23, 42, 0.65); /* slightly more transparent */
-  backdrop-filter: blur(var(--blur-soft)) saturate(150%);
-  -webkit-backdrop-filter: blur(var(--blur-soft)) saturate(150%);
-  
-  border-radius: 999px;
-  padding: 6px 11px;
-  
-  /* Default border is soft white */
-  border: 1px solid rgba(148, 163, 184, 0.5); 
-  
-  /* Silver glow/line effect for Dynamic Island look */
-  box-shadow: 0 0 0 0.5px #f3f4f6, 0 12px 30px rgba(15, 23, 42, 0.7);
-  animation: weather-ring-fade 3s ease-in-out infinite alternate; /* Dynamic glow */
-  
-  transition: background 150ms ease-out, border-color 150ms ease-out,
-    transform 120ms ease-out;
-}
-
-/* Keyframes for the Weather's fading silver ring effect */
-@keyframes weather-ring-fade {
-  0% {
-    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.4), /* Outer glow */
-                inset 0 0 0 1px rgba(255, 255, 255, 0.1); /* Inner edge */
-  }
-  50% {
-    box-shadow: 0 0 0 1.5px rgba(255, 255, 255, 0.8),
-                inset 0 0 0 1.5px rgba(255, 255, 255, 0.3);
-  }
-  100% {
-    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.4),
-                inset 0 0 0 1px rgba(255, 255, 255, 0.1);
-  }
-}
-
-.weather:hover {
-  background: rgba(15, 23, 42, 0.95);
-  border-color: #bfdbfe;
-  transform: translateY(-1px);
-}
-
+/* Weather text/icon bits */
 .wx-icon {
   font-size: 16px;
 }
@@ -1181,28 +1259,27 @@ footer {
 
   /* --- Mobile Collapsible Bottom Bar Navigation (Swipe for Apps) --- */
   .sidenav {
-    left: 50%; /* Center the bar */
+    left: 50%;
     top: auto;
-    bottom: 12px; /* Lift slightly from the bottom edge */
-    transform: translateX(-50%); /* Center horizontally */
+    bottom: 12px;
+    transform: translateX(-50%);
     z-index: 1000;
     flex-direction: row;
-    width: 95%; /* Narrower width for the pill shape */
-    max-width: 400px; /* Limit max width for centering */
+    width: 95%;
+    max-width: 400px;
     padding: 8px 10px;
-    border-radius: 999px; /* Pill shape */
-    border-bottom: 1px solid var(--border-soft); 
+    border-radius: 999px;
+    border-bottom: 1px solid var(--border-soft);
     background: rgba(15, 23, 42, 0.96);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    overflow: hidden; /* Hide excess content */
+    overflow: hidden;
     transition: width 0.3s ease-out, transform 0.3s ease-out;
   }
-  
-  /* Cues for swipe/more content */
+
   .sidenav::before,
   .sidenav::after {
-    content: ''; /* Empty content for arrows/text */
+    content: "";
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
@@ -1211,16 +1288,14 @@ footer {
     opacity: 0.9;
     animation: pulse-cue 2s infinite ease-in-out;
   }
-  
-  /* Left Arrow/Swipe Cue */
+
   .sidenav::before {
-    content: '«'; /* Left arrow */
+    content: "«";
     left: 8px;
   }
 
-  /* Right Arrow/Swipe Cue (Illuminated Text) */
   .sidenav::after {
-    content: 'SWIPE FOR APPS »'; /* Illuminated text cue */
+    content: "SWIPE FOR APPS »";
     right: 8px;
     font-weight: 600;
     letter-spacing: 0.05em;
@@ -1231,17 +1306,21 @@ footer {
   }
 
   @keyframes pulse-cue {
-      0% { opacity: 0.7; }
-      50% { opacity: 1; }
-      100% { opacity: 0.7; }
+    0% {
+      opacity: 0.7;
+    }
+    50% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0.7;
+    }
   }
-
 
   .sidenav-toggle {
     display: none;
   }
 
-  /* The actual links are visible but constrained */
   .sidenav a {
     opacity: 1;
     transform: none;
@@ -1249,7 +1328,7 @@ footer {
     flex: 1;
     padding: 6px;
     justify-content: center;
-    min-width: 25px; /* Ensure icons don't completely disappear */
+    min-width: 25px;
   }
 
   .sidenav a span.label {
@@ -1260,14 +1339,12 @@ footer {
     display: none;
   }
 
-  /* Remove hover effects that are desktop-specific */
   .sidenav:hover {
     width: 95%;
     gap: 0;
     background: rgba(15, 23, 42, 0.96);
   }
-  
-  /* Make sure main content not hidden behind bar */
+
   .container {
     padding-bottom: 90px;
   }
@@ -1324,13 +1401,16 @@ footer {
     gap: 8px;
   }
 
+  /* Mobile clock pill slightly tighter */
   .clock {
-    padding: 4px 8px;
-    font-size: 11px;
+    padding: 4px 10px;
+    font-size: 0.85rem;
+    letter-spacing: 0.12em;
+    min-width: 0;
   }
 
   .weather {
-    padding: 4px 9px;
+    padding: 4px 10px;
     font-size: 11px;
   }
 
@@ -1365,12 +1445,10 @@ footer {
     height: 44px;
   }
 
-  /* 👇 When exec panel is open, slide the seal to the left */
   body.exec-open-mobile .seal-center-btn {
     transform: translateX(-80px);
   }
 
-  /* Exec panel docked under seal */
   .exec-panel {
     left: auto;
     right: 12px;
@@ -1570,6 +1648,7 @@ footer {
     transform: scale(1);
   }
 }
+
 /* ===== Congress Table ===== */
 .table-wrap {
   margin-top: 12px;
@@ -1600,7 +1679,7 @@ footer {
 }
 
 .member-row:hover {
-  background: rgba(56, 189, 248, 0.20);
+  background: rgba(56, 189, 248, 0.2);
   box-shadow: 0 0 12px rgba(125, 211, 252, 0.45);
   transform: translateY(-1px);
 }
@@ -1623,7 +1702,7 @@ footer {
 
 /* --- MODAL WRAPPERS (Shared styles for Congress and Single Panel Modal) --- */
 #congressModal,
-#singlePanelModal { /* Added singlePanelModal here */
+#singlePanelModal {
   position: fixed;
   inset: 0;
   display: none;
@@ -1653,16 +1732,14 @@ footer {
   height: 90vh;
   padding: 16px;
   border-radius: 24px;
-  
-  /* Glowing Glass Look */
+
   background: rgba(30, 58, 138, 0.25);
   border: 2px solid rgba(125, 211, 252, 0.6);
   backdrop-filter: blur(24px) saturate(200%);
   color: #e0f2fe;
-  
-  /* Dashboard Glow */
+
   box-shadow: 0 0 50px rgba(56, 189, 248, 0.7);
-  
+
   display: flex;
   flex-direction: column;
 }
@@ -1685,52 +1762,50 @@ footer {
 
 /* Apply padding to the main Congress panel inside the modal */
 #congressModal .congress {
-    padding: 0;
-    margin-top: 10px;
-    background: transparent;
-    backdrop-filter: none;
-    border: none;
-    box-shadow: none;
-    overflow-y: auto;
-    flex-grow: 1;
+  padding: 0;
+  margin-top: 10px;
+  background: transparent;
+  backdrop-filter: none;
+  border: none;
+  box-shadow: none;
+  overflow-y: auto;
+  flex-grow: 1;
 }
 
 /* Fix table container to scroll inside the modal */
 #congressModal .congress table {
-    height: 100%;
-    background: rgba(15, 23, 42, 0.5); 
+  height: 100%;
+  background: rgba(15, 23, 42, 0.5);
 }
 
 /* Ensure the sticky header works within the modal scroll */
 #congressModal .congress th {
-    top: -1px;
+  top: -1px;
 }
 
 /* Profile button link styling inside the new table structure */
 .profile-link {
-    background: rgba(59, 130, 246, 0.2);
-    border: 1px solid rgba(125, 211, 252, 0.6);
-    padding: 4px 10px;
-    border-radius: 999px;
-    color: #e5e7eb;
-    font-size: 12px;
-    cursor: pointer;
-    text-decoration: none !important;
-    display: inline-block;
+  background: rgba(59, 130, 246, 0.2);
+  border: 1px solid rgba(125, 211, 252, 0.6);
+  padding: 4px 10px;
+  border-radius: 999px;
+  color: #e5e7eb;
+  font-size: 12px;
+  cursor: pointer;
+  text-decoration: none !important;
+  display: inline-block;
 }
 .profile-link:hover {
-    background: rgba(59, 130, 246, 0.35);
-    box-shadow: 0 0 10px rgba(125, 211, 252, 0.55);
+  background: rgba(59, 130, 246, 0.35);
+  box-shadow: 0 0 10px rgba(125, 211, 252, 0.55);
 }
 
-/* Sky-blue transparent glass-like hover effect on table rows */
 .member-row {
   transition: background 0.25s, box-shadow 0.25s, transform 0.2s;
 }
 
 .member-row:hover {
-  /* This is your requested effect: transparent sky blue background */
-  background: rgba(56, 189, 248, 0.20); 
+  background: rgba(56, 189, 248, 0.2);
   box-shadow: 0 0 8px rgba(125, 211, 252, 0.4);
   transform: translateY(-1px);
 }
@@ -1745,6 +1820,12 @@ footer {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: scale(0.95); }
-  to   { opacity: 1; transform: scale(1); }
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
