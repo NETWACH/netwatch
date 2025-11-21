@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <title>NetWatch • Member Center</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" href="logo.png" type="image/png" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* --- Layout for the member / subscriptions hub --- */
+    .member-shell {
+      max-width: 1200px;
+      margin: 32px auto;
+      padding: 0 16px 40px;
+    }
+
+    .member-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .member-header-meta {
+      font-size: 12px;
+      color: var(--muted, #9ca3af);
+    }
+
+    .member-header-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .member-nav-link {
+      font-size: 12px;
+      color: #93c5fd;
+      text-decoration: none;
+    }
+
+    .member-grid {
+      margin-top: 24px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.5fr) minmax(0, 2fr);
+      gap: 20px;
+    }
+
+    @media (max-width: 900px) {
+      .member-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .section-label {
+      font-size: 12px;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      color: var(--muted, #9ca3af);
+      margin-bottom: 4px;
+    }
+
+    .profile-card-main {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 12px;
+    }
+
+    .avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 20%, #38bdf8, #1d4ed8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: #e5e7eb;
+      box-shadow: 0 0 0 2px rgba(15, 23, 42, 0.9),
+                  0 12px 40px rgba(0, 0, 0, 0.7);
+      font-size: 20px;
+    }
+
+    .profile-name {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .profile-email {
+      font-size: 13px;
+      color: var(--muted, #9ca3af);
+    }
+
+    .profile-meta-row {
+      font-size: 12px;
+      color: var(--muted, #9ca3af);
+      display: flex;
+      justify-content: space-between;
+      margin-top: 8px;
+    }
+
+    .pill-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      background: rgba(15, 23, 42, .9);
+      border: 1px solid rgba(34, 197, 94, .7);
+      color: #bbf7d0;
+    }
+
+    .pill-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #22c55e;
+    }
+
+    .profile-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .btn-ghost,
+    .btn-primary {
+      border-radius: 999px;
+      padding: 6px 14px;
+      font-size: 12px;
+      border: 1px solid rgba(148, 163, 184, .6);
+      background: transparent;
+      color: #e5e7eb;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      border-color: #2563eb;
+      background: #2563eb;
+      font-weight: 600;
+    }
+
+    .coming-soon-card {
+      margin-top: 16px;
+    }
+
+    .coming-soon-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 999px;
+      padding: 3px 10px;
+      font-size: 11px;
+      background: rgba(30, 64, 175, .9);
+      border: 1px solid rgba(129, 140, 248, .9);
+      color: #e0f2fe;
+    }
+
+    .sparkline {
+      margin-top: 12px;
+      height: 56px;
+      display: flex;
+      align-items: flex-end;
+      gap: 4px;
+    }
+
+    .sparkline-bar {
+      flex: 1;
+      border-radius: 999px;
+      background: linear-gradient(to top, #1d4ed8, #38bdf8);
+      opacity: .3;
+    }
+
+    .sparkline-bar.highlight {
+      opacity: 1;
+      box-shadow: 0 0 20px rgba(56, 189, 248, .9);
+    }
+
+    .sparkline-caption {
+      margin-top: 8px;
+      font-size: 11px;
+      color: var(--muted, #9ca3af);
+    }
+
+    .plan-name {
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .plan-price {
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .plan-meta {
+      font-size: 12px;
+      color: var(--muted, #9ca3af);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      border: 1px solid rgba(148, 163, 184, .7);
+      color: rgba(209, 213, 219, .9);
+    }
+    .badge.badge-primary {
+      border-color: #22c55e;
+      color: #bbf7d0;
+    }
+
+    .addons-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .addons-list li {
+      padding: 10px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(148, 163, 184, .15);
+      font-size: 13px;
+    }
+
+    .addons-list li:last-child {
+      border-bottom: none;
+    }
+
+    .addon-name {
+      font-weight: 500;
+    }
+
+    .addon-meta {
+      font-size: 12px;
+      color: var(--muted, #9ca3af);
+    }
+
+    .toggle-pill {
+      width: 42px;
+      height: 22px;
+      border-radius: 999px;
+      background: rgba(30, 64, 175, .7);
+      border: 1px solid rgba(96, 165, 250, .9);
+      position: relative;
+    }
+
+    .toggle-pill::after {
+      content: "";
+      position: absolute;
+      top: 2px;
+      left: 22px;
+      width: 16px;
+      height: 16px;
+      border-radius: 999px;
+      background: #e5e7eb;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, .6);
+    }
+
+    .history-table {
+      margin-top: 8px;
+      font-size: 12px;
+    }
+
+    .history-header,
+    .history-row {
+      display: grid;
+      grid-template-columns: 1.1fr 1.3fr .7fr .9fr;
+      gap: 8px;
+      padding: 6px 0;
+    }
+
+    .history-header {
+      border-bottom: 1px solid rgba(148, 163, 184, .35);
+      color: var(--muted, #9ca3af);
+      text-transform: uppercase;
+      font-size: 11px;
+      letter-spacing: .12em;
+    }
+
+    .history-row {
+      border-bottom: 1px solid rgba(148, 163, 184, .15);
+    }
+
+    .history-row:last-child {
+      border-bottom: none;
+    }
+
+    .history-amount {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .history-amount.negative {
+      color: #f97373;
+    }
+
+    .history-amount.positive {
+      color: #4ade80;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header / masthead -->
+  <header class="card header member-header">
+    <div class="brand">
+      <img src="logo.png" alt="NetWatch logo" />
+      <span class="brand-wordmark">NetWatch</span>
+    </div>
+
+    <div>
+      <div class="member-header-title">Member Center</div>
+      <div class="member-header-meta">
+        Manage your NetWatch subscriptions, billing, and future banking tools.
+      </div>
+    </div>
+
+    <div style="text-align:right; font-size:12px;">
+      <div class="member-header-meta">Back to main site</div>
+      <a href="index.html#home" class="member-nav-link">Return to NetWatch ↗</a>
+    </div>
+  </header>
+
+  <main class="member-shell">
+    <section class="member-grid">
+      <!-- LEFT COLUMN: profile + coming soon -->
+      <div>
+        <section class="card">
+          <div class="section-label">Profile</div>
+          <div class="profile-card-main">
+            <div class="avatar" id="profileAvatar">RM</div>
+            <div>
+              <div class="profile-name" id="profileName">Loading…</div>
+              <div class="profile-email" id="profileEmail"></div>
+            </div>
+          </div>
+
+          <div class="profile-meta-row">
+            <div id="profileTier">Plan: —</div>
+            <div id="profileSince">Member since —</div>
+          </div>
+
+          <div class="profile-meta-row" style="margin-top:4px;">
+            <div>
+              <span class="pill-status" id="profileStatus">
+                <span class="pill-dot"></span>
+                <span>Active membership</span>
+              </span>
+            </div>
+            <div id="profileLocation"></div>
+          </div>
+
+          <div class="profile-actions">
+            <button class="btn-primary" type="button">Update billing</button>
+            <button class="btn-ghost" type="button">Download statements</button>
+          </div>
+        </section>
+
+        <section class="card coming-soon-card">
+          <div class="section-label">NetWatch bank</div>
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <div style="font-size:14px; font-weight:600;">NetWatch Bank (coming soon)</div>
+              <div style="font-size:12px; color:var(--muted,#9ca3af);">
+                Unified balances for benefits, risk credits, and safety-net payouts.
+              </div>
+            </div>
+            <span class="coming-soon-chip">Preview • 2025 roadmap</span>
+          </div>
+
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:26%;"></div>
+            <div class="sparkline-bar" style="height:44%;"></div>
+            <div class="sparkline-bar highlight" style="height:86%;"></div>
+            <div class="sparkline-bar" style="height:40%;"></div>
+            <div class="sparkline-bar" style="height:58%;"></div>
+          </div>
+          <div class="sparkline-caption">
+            Prototype risk-savings curve. When banking launches, this will show your
+            NetWatch “safety balance” instead of $ balances today.
+          </div>
+        </section>
+      </div>
+
+      <!-- RIGHT COLUMN: subscriptions + history -->
+      <div>
+        <section class="card">
+          <div class="section-label">Membership</div>
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:16px;">
+            <div>
+              <div class="plan-name" id="primaryPlanName">NetWatch Pro</div>
+              <div class="plan-meta" id="primaryPlanMeta">
+                Billed monthly • Next payment —
+              </div>
+            </div>
+            <div style="text-align:right;">
+              <div class="plan-price" id="primaryPlanPrice">$0.00</div>
+              <div class="plan-meta" id="primaryPlanStatus">Status: —</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="card" style="margin-top:16px;">
+          <div class="section-label">Add-on subscriptions</div>
+          <ul id="addonsList" class="addons-list"></ul>
+        </section>
+
+        <section class="card" style="margin-top:16px;">
+          <div class="section-label">Billing history</div>
+          <div class="history-table">
+            <div class="history-header">
+              <div>Date</div>
+              <div>Description</div>
+              <div>Method</div>
+              <div class="history-amount">Amount</div>
+            </div>
+            <div id="historyBody"></div>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    © <span id="year"></span> NetWatch • Atlanta, GA 30303
+  </footer>
+
+  <script src="account.js"></script>
+</body>
+</html>
