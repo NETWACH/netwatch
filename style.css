@@ -210,9 +210,7 @@ body::before {
   gap: 14px;
 }
 
-/* --- CLOCK (Gold Static Ring) --- */
 .clock {
-  position: relative;
   font-variant-numeric: tabular-nums;
   color: #e5e7eb;
   font-size: 13px;
@@ -220,32 +218,7 @@ body::before {
   border-radius: 999px;
   background: rgba(15, 23, 42, 0.7);
   border: 1px solid rgba(148, 163, 184, 0.4);
-  /* Stopped spinning animation, static gold ring/glow remains */
-  box-shadow: 0 0 0 1.5px var(--warning), 0 0 8px rgba(0, 0, 0, 0.5); 
-  overflow: hidden; /* Contains the pseudo-element glow */
 }
-
-/* Keyframes for the Clock's gold glow ring effect (removed from clock element) */
-@keyframes clock-ring-spin {
-  0% {
-    box-shadow: 
-        0 0 0 1.5px var(--warning), /* Gold ring */
-        0 0 10px rgba(255, 215, 0, 0.6);
-    transform: rotate(0deg) scale(1);
-  }
-  50% {
-    box-shadow: 
-        0 0 0 1.5px rgba(255, 215, 0, 0.3), /* Fade ring */
-        0 0 5px rgba(255, 215, 0, 0.3);
-  }
-  100% {
-    box-shadow: 
-        0 0 0 1.5px var(--warning),
-        0 0 10px rgba(255, 215, 0, 0.6);
-    transform: rotate(360deg) scale(1.02);
-  }
-}
-
 
 /* Theme toggle */
 .theme-toggle {
@@ -274,49 +247,23 @@ body::before {
   border-color: #bfdbfe;
 }
 
-/* --- WEATHER (Silver Dynamic Island/Glass) --- */
+/* Weather chip + panel */
 .weather {
-  /* Existing styles */
   display: inline-flex;
   align-items: center;
   gap: 8px;
   color: #e5e7eb;
   font-size: 13px;
   cursor: pointer;
-  
-  /* Blended transparent background for glass effect */
-  background: rgba(15, 23, 42, 0.65); /* slightly more transparent */
-  backdrop-filter: blur(var(--blur-soft)) saturate(150%);
-  -webkit-backdrop-filter: blur(var(--blur-soft)) saturate(150%);
-  
+  background: rgba(15, 23, 42, 0.8);
   border-radius: 999px;
   padding: 6px 11px;
-  
-  /* Default border is soft white */
-  border: 1px solid rgba(148, 163, 184, 0.5); 
-  
-  /* Silver glow/line effect for Dynamic Island look */
-  box-shadow: 0 0 0 0.5px #f3f4f6, 0 12px 30px rgba(15, 23, 42, 0.7);
-  animation: weather-ring-fade 3s ease-in-out infinite alternate; /* Dynamic glow */
-  
+  border: 1px solid rgba(148, 163, 184, 0.5);
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(var(--blur-soft));
+  -webkit-backdrop-filter: blur(var(--blur-soft));
   transition: background 150ms ease-out, border-color 150ms ease-out,
     transform 120ms ease-out;
-}
-
-/* Keyframes for the Weather's fading silver ring effect */
-@keyframes weather-ring-fade {
-  0% {
-    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.4), /* Outer glow */
-                inset 0 0 0 1px rgba(255, 255, 255, 0.1); /* Inner edge */
-  }
-  50% {
-    box-shadow: 0 0 0 1.5px rgba(255, 255, 255, 0.8),
-                inset 0 0 0 1.5px rgba(255, 255, 255, 0.3);
-  }
-  100% {
-    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.4),
-                inset 0 0 0 1px rgba(255, 255, 255, 0.1);
-  }
 }
 
 .weather:hover {
@@ -985,6 +932,16 @@ footer {
   cursor: pointer;
 }
 
+.weather-app-title {
+  flex: 1;
+  text-align: center;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-size: 12px;
+  color: #cbd5f5;
+}
+
 .unit-toggle-app {
   font-size: 12px;
 }
@@ -1534,182 +1491,4 @@ footer {
     opacity: 1;
     transform: scale(1);
   }
-}
-/* ===== Congress Table ===== */
-.table-wrap {
-  margin-top: 12px;
-  overflow-x: auto;
-}
-
-.congress {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 14px;
-}
-
-.congress th {
-  text-align: left;
-  padding: 10px;
-  color: #9ca3af;
-  border-bottom: 1px solid #334155;
-}
-
-.congress td {
-  padding: 10px;
-  border-bottom: 1px solid #1e293b;
-}
-
-/* Sky-blue glowing hover */
-.member-row {
-  transition: background 0.25s, box-shadow 0.25s, transform 0.2s;
-}
-
-.member-row:hover {
-  background: rgba(56, 189, 248, 0.20);
-  box-shadow: 0 0 12px rgba(125, 211, 252, 0.45);
-  transform: translateY(-1px);
-}
-
-/* Profile Button */
-.profile-btn {
-  background: rgba(59, 130, 246, 0.2);
-  border: 1px solid rgba(125, 211, 252, 0.6);
-  padding: 4px 10px;
-  border-radius: 999px;
-  color: #e5e7eb;
-  font-size: 12px;
-  cursor: pointer;
-}
-
-.profile-btn:hover {
-  background: rgba(59, 130, 246, 0.35);
-  box-shadow: 0 0 10px rgba(125, 211, 252, 0.55);
-}
-
-/* --- MODAL WRAPPERS (Shared styles for Congress and Single Panel Modal) --- */
-#congressModal,
-#singlePanelModal { /* Added singlePanelModal here */
-  position: fixed;
-  inset: 0;
-  display: none;
-  justify-content: center;
-  align-items: center;
-  z-index: 500;
-  animation: fadeIn 0.25s ease;
-}
-
-#congressModal.open,
-#singlePanelModal.open {
-  display: flex;
-}
-
-.modal-backdrop {
-  position: absolute;
-  inset: 0;
-  background: rgba(15, 23, 42, 0.9);
-  backdrop-filter: blur(15px);
-}
-
-/* --- GLOWING GLASS DASHBOARD EFFECT (Used by both modals) --- */
-.congress-modal-window {
-  position: relative;
-  width: 95%;
-  max-width: 1000px;
-  height: 90vh;
-  padding: 16px;
-  border-radius: 24px;
-  
-  /* Glowing Glass Look */
-  background: rgba(30, 58, 138, 0.25);
-  border: 2px solid rgba(125, 211, 252, 0.6);
-  backdrop-filter: blur(24px) saturate(200%);
-  color: #e0f2fe;
-  
-  /* Dashboard Glow */
-  box-shadow: 0 0 50px rgba(56, 189, 248, 0.7);
-  
-  display: flex;
-  flex-direction: column;
-}
-
-/* Styles for content injected into the general modal */
-#singlePanelModal .modal-content-area {
-  overflow-y: auto;
-  flex-grow: 1;
-}
-
-#singlePanelModal .modal-content-area .live-panel,
-#singlePanelModal .modal-content-area .links {
-  background: transparent;
-  backdrop-filter: none;
-  border: none;
-  box-shadow: none;
-  padding: 0;
-  margin: 0;
-}
-
-/* Apply padding to the main Congress panel inside the modal */
-#congressModal .congress {
-    padding: 0;
-    margin-top: 10px;
-    background: transparent;
-    backdrop-filter: none;
-    border: none;
-    box-shadow: none;
-    overflow-y: auto;
-    flex-grow: 1;
-}
-
-/* Fix table container to scroll inside the modal */
-#congressModal .congress table {
-    height: 100%;
-    background: rgba(15, 23, 42, 0.5); 
-}
-
-/* Ensure the sticky header works within the modal scroll */
-#congressModal .congress th {
-    top: -1px;
-}
-
-/* Profile button link styling inside the new table structure */
-.profile-link {
-    background: rgba(59, 130, 246, 0.2);
-    border: 1px solid rgba(125, 211, 252, 0.6);
-    padding: 4px 10px;
-    border-radius: 999px;
-    color: #e5e7eb;
-    font-size: 12px;
-    cursor: pointer;
-    text-decoration: none !important;
-    display: inline-block;
-}
-.profile-link:hover {
-    background: rgba(59, 130, 246, 0.35);
-    box-shadow: 0 0 10px rgba(125, 211, 252, 0.55);
-}
-
-/* Sky-blue transparent glass-like hover effect on table rows */
-.member-row {
-  transition: background 0.25s, box-shadow 0.25s, transform 0.2s;
-}
-
-.member-row:hover {
-  /* This is your requested effect: transparent sky blue background */
-  background: rgba(56, 189, 248, 0.20); 
-  box-shadow: 0 0 8px rgba(125, 211, 252, 0.4);
-  transform: translateY(-1px);
-}
-
-/* Close button inside modal window */
-#congressModal .panel-close,
-#singlePanelModal .panel-close {
-  z-index: 10;
-  position: absolute;
-  top: 16px;
-  right: 16px;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: scale(0.95); }
-  to   { opacity: 1; transform: scale(1); }
 }
