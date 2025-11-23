@@ -1,257 +1,300 @@
-let wxUnit = "F"; // "F" or "C"
-let wxData = null;
-let lastPressure = null;
+/*
+ * Full-screen Weather App (weather.html)
+ * - Same icon set as header
+ * - Location: GPS → IP → Atlanta fallback
+ * - Unit toggle °F / °C
+ * - Back button to previous page
+ */
 
-const DEFAULT_LAT = 40.7128;
-const DEFAULT_LON = -74.0060;
+/* ------------ ICON HELPERS ------------ */
 
-const el = (id) => document.getElementById(id);
-const els = {
-  locate: el("wx-locate"),
-  unitF: el("wx-unit-f"),
-  unitC: el("wx-unit-c"),
+function iconFromWeatherCode(code, isDay, cssClass = "weather-anim") {
+  const day = !!isDay;
+  const ICON_BASE = "icons/"; // icons live in /icons
 
-  location: el("wx-location"),
-  conditionText: el("wx-condition-text"),
-  conditionIcon: el("wx-condition-icon"),
-  currentTemp: el("wx-current-temp"),
-  feelsLike: el("wx-feels-like"),
-  hiLo: el("wx-hi-lo"),
-  wind: el("wx-wind"),
-  precip: el("wx-precip"),
+  const img = (file, alt) =>
+    `<img src="${ICON_BASE}${file}" alt="${alt}" class="${cssClass}">`;
 
-  hourly: el("wx-hourly"),
-  daily: el("wx-daily"),
-  heroAnim: el("wx-hero-anim"),
-  pressureValue: el("wx-pressure-value"),
-  pressureTrend: el("wx-pressure-trend"),
-};
-
-// weather code → description + simple icon
-function getWeatherInfo(code, isDay = 1) {
-  const map = {
-    0: { desc: "Clear sky", icon: isDay ? "☀️" : "🌙" },
-    1: { desc: "Mostly clear", icon: isDay ? "🌤️" : "🌙" },
-    2: { desc: "Partly cloudy", icon: "⛅" },
-    3: { desc: "Cloudy", icon: "☁️" },
-    45: { desc: "Fog", icon: "🌫️" },
-    48: { desc: "Fog", icon: "🌫️" },
-    51: { desc: "Light drizzle", icon: "🌦️" },
-    53: { desc: "Drizzle", icon: "🌦️" },
-    55: { desc: "Heavy drizzle", icon: "🌧️" },
-    61: { desc: "Light rain", icon: "🌧️" },
-    63: { desc: "Rain", icon: "🌧️" },
-    65: { desc: "Heavy rain", icon: "🌧️" },
-    71: { desc: "Light snow", icon: "🌨️" },
-    73: { desc: "Snow", icon: "🌨️" },
-    75: { desc: "Heavy snow", icon: "❄️" },
-    95: { desc: "Thunderstorm", icon: "⛈️" },
-  };
-  return map[code] || { desc: "Unknown", icon: "❔" };
+  if (code === 0) {
+    return img(
+      day ? "day.svg" : "night.svg",
+      day ? "Clear sky" : "Clear night"
+    );
+  }
+  if (code === 1 || code === 2) {
+    return img(
+      day ? "cloudy-day-1.svg" : "cloudy-night-1.svg",
+      "Partly cloudy"
+    );
+  }
+  if (code === 3) return img("cloudy.svg", "Overcast");
+  if (code >= 45 && code <= 48) return img("cloudy.svg", "Fog");
+  if (code >= 51 && code <= 57) return img("rainy-1.svg", "Drizzle");
+  if (code >= 61 && code <= 67) return img("rainy-4.svg", "Rain");
+  if (code >= 71 && code <= 77) return img("snowy-4.svg", "Snow");
+  if (code >= 80 && code <= 82) return img("rainy-6.svg", "Rain showers");
+  if (code >= 85 && code <= 86) return img("snowy-6.svg", "Snow showers");
+  if (code >= 95) return img("thunder.svg", "Thunderstorm");
+  return img("weather.svg", "Weather");
 }
 
-function toUnit(celsius) {
-  if (wxUnit === "F") return Math.round((celsius * 9) / 5 + 32);
-  return Math.round(celsius);
-}
+/* ------------ LOCATION HELPERS ------------ */
 
-function findCurrentIndex(times) {
-  const now = new Date();
-  let idx = 0;
-  let min = Infinity;
-  times.forEach((t, i) => {
-    const d = new Date(t);
-    const diff = Math.abs(d - now);
-    if (diff < min) {
-      min = diff;
-      idx = i;
-    }
+function getGeoLocationViaBrowser() {
+  return new Promise((resolve) => {
+    if (!navigator.geolocation) return resolve(null);
+
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        resolve({
+          lat: pos.coords.latitude,
+          lon: pos.coords.longitude,
+          label: "Local weather",
+        });
+      },
+      () => resolve(null),
+      {
+        enableHighAccuracy: false,
+        timeout: 7000,
+        maximumAge: 10 * 60 * 1000,
+      }
+    );
   });
-  return idx;
 }
 
-function formatHour(iso, asNow) {
-  if (asNow) return "Now";
-  return new Date(iso).toLocaleTimeString("en-US", { hour: "numeric" });
-}
+async function getLocationViaIP() {
+  try {
+    const res = await fetch("https://ipwho.is/");
+    const data = await res.json();
+    if (!data.success) return null;
 
-function dayLabel(iso, isFirst) {
-  if (isFirst) return "Today";
-  return new Date(iso).toLocaleDateString("en-US", { weekday: "short" });
-}
+    const city = data.city || "";
+    const region = data.region || "";
+    const country = data.country_code || "";
 
-function playHeroAnimationFor(code, isDay) {
-  // hook for your real animations later; currently just a placeholder
-}
+    let label = city;
+    if (city && region) label = `${city}, ${region}`;
+    else if (!city && region) label = region;
+    if (!label && country) label = country;
+    if (!label) label = "Local weather";
 
-function updateBarometer(pressure) {
-  const minP = 970;
-  const maxP = 1040;
-  const clamped = Math.max(minP, Math.min(maxP, pressure));
-  const ratio = (clamped - minP) / (maxP - minP);
-  const angle = -40 + ratio * 80;
-  document.documentElement.style.setProperty("--wx-needle-angle", angle + "deg");
-
-  els.pressureValue.textContent = `${Math.round(pressure)} hPa`;
-
-  if (lastPressure == null) {
-    els.pressureTrend.textContent = "Trend steady";
-  } else {
-    const diff = pressure - lastPressure;
-    if (Math.abs(diff) < 0.7) {
-      els.pressureTrend.textContent = "Trend steady";
-    } else if (diff > 0) {
-      els.pressureTrend.textContent = "Rising pressure";
-    } else {
-      els.pressureTrend.textContent = "Falling pressure";
-    }
-  }
-  lastPressure = pressure;
-}
-
-function render() {
-  if (!wxData) return;
-  const { current_weather: curr, hourly, daily } = wxData;
-  const idx = findCurrentIndex(hourly.time);
-  const info = getWeatherInfo(curr.weathercode, curr.is_day);
-
-  els.location.textContent = wxData.locationName || "Your location";
-  els.conditionText.textContent = info.desc;
-  els.conditionIcon.textContent = info.icon;
-  els.currentTemp.textContent = `${toUnit(curr.temperature)}°`;
-
-  const feelsC =
-    typeof hourly.apparent_temperature[idx] === "number"
-      ? hourly.apparent_temperature[idx]
-      : curr.temperature;
-  els.feelsLike.textContent = `Feels like ${toUnit(feelsC)}°`;
-
-  const hi = daily.temperature_2m_max[0];
-  const lo = daily.temperature_2m_min[0];
-  els.hiLo.textContent = `High ${toUnit(hi)}° · Low ${toUnit(lo)}°`;
-
-  els.wind.textContent = `Wind ${Math.round(curr.windspeed)} ${
-    curr.windspeed_unit || "km/h"
-  }`;
-
-  const precipNow = hourly.precipitation_probability?.[idx];
-  els.precip.textContent =
-    typeof precipNow === "number" ? `Precip ${precipNow}%` : "Precip —";
-
-  playHeroAnimationFor(curr.weathercode, curr.is_day);
-
-  // hourly (next 10 hours)
-  let hourlyHTML = "";
-  for (let i = idx; i < idx + 10 && i < hourly.time.length; i++) {
-    const hInfo = getWeatherInfo(hourly.weathercode[i], hourly.is_day[i]);
-    const temp = hourly.temperature_2m[i];
-    const precip = hourly.precipitation_probability?.[i];
-
-    hourlyHTML += `
-      <div class="wx-hourly-item">
-        <div class="wx-hourly-item-time">${formatHour(
-          hourly.time[i],
-          i === idx
-        )}</div>
-        <div class="wx-hourly-item-icon">${hInfo.icon}</div>
-        <div class="wx-hourly-item-temp">${toUnit(temp)}°</div>
-        ${
-          typeof precip === "number"
-            ? `<div class="wx-hourly-item-precip">${precip}%</div>`
-            : ""
-        }
-      </div>`;
-  }
-  els.hourly.innerHTML = hourlyHTML;
-
-  // daily (10-day)
-  let dailyHTML = "";
-  for (let i = 0; i < daily.time.length && i < 10; i++) {
-    const dInfo = getWeatherInfo(daily.weathercode[i], 1);
-    const high = daily.temperature_2m_max[i];
-    const low = daily.temperature_2m_min[i];
-    const label = dayLabel(daily.time[i], i === 0);
-    const precip = daily.precipitation_probability_max?.[i];
-
-    dailyHTML += `
-      <div class="wx-daily-pill">
-        <div class="wx-daily-pill-temps">
-          <span>${toUnit(high)}°</span>
-          <span>${toUnit(low)}°</span>
-        </div>
-        <div class="wx-daily-pill-icon">${dInfo.icon}</div>
-        <div class="wx-daily-pill-label">${label}</div>
-        ${
-          typeof precip === "number"
-            ? `<div style="font-size:0.7rem;color:#9ca3af;">${precip}%</div>`
-            : ""
-        }
-      </div>`;
-  }
-  els.daily.innerHTML = dailyHTML;
-
-  const pressure =
-    typeof hourly.pressure_msl?.[idx] === "number"
-      ? hourly.pressure_msl[idx]
-      : hourly.surface_pressure?.[idx];
-  if (typeof pressure === "number") {
-    updateBarometer(pressure);
+    return {
+      lat: data.latitude,
+      lon: data.longitude,
+      label,
+    };
+  } catch (err) {
+    console.error("IP location error (app):", err);
+    return null;
   }
 }
 
-async function loadWeather(useGeo) {
-  let lat = DEFAULT_LAT;
-  let lon = DEFAULT_LON;
-  let locationName = "New York, US";
+async function resolveLocationApp(fallback) {
+  const geo = await getGeoLocationViaBrowser();
+  if (geo) return geo;
 
-  if (useGeo && navigator.geolocation) {
-    try {
-      const pos = await new Promise((res, rej) =>
-        navigator.geolocation.getCurrentPosition(res, rej)
-      );
-      lat = pos.coords.latitude;
-      lon = pos.coords.longitude;
-      locationName = "Your location";
-    } catch (e) {
-      console.warn("Geolocation failed, using default.", e);
-      locationName = "New York, US (default)";
-    }
+  const ipLoc = await getLocationViaIP();
+  if (ipLoc) return ipLoc;
+
+  return fallback;
+}
+
+/* ------------ SKY / BACKGROUND MOOD ------------ */
+
+function setSkyMood(code, isDay) {
+  const bg = document.getElementById("wx-app-bg");
+  if (!bg) return;
+
+  let mood = "default";
+
+  if (!isDay) {
+    mood = "clear-night";
+  } else if (code === 0 || code === 1) {
+    mood = "clear";
+  } else if (code === 2 || code === 3) {
+    mood = "overcast";
+  } else if ((code >= 61 && code <= 67) || (code >= 80 && code <= 82)) {
+    mood = "rain";
+  } else if (code >= 71 && code <= 77) {
+    mood = "snow";
+  } else if (code >= 95) {
+    mood = "rain";
   }
+
+  bg.setAttribute("data-sky", mood);
+}
+
+/* ------------ WEATHER FETCH + RENDER ------------ */
+
+async function fetchWeatherApp(lat, lon, unit, labelHint) {
+  const tempUnit = unit === "celsius" ? "celsius" : "fahrenheit";
 
   const url =
     `https://api.open-meteo.com/v1/forecast` +
-    `?latitude=${lat}&longitude=${lon}` +
+    `?latitude=${lat}` +
+    `&longitude=${lon}` +
     `&current_weather=true` +
-    `&hourly=temperature_2m,apparent_temperature,weathercode,is_day,` +
-    `precipitation_probability,pressure_msl,surface_pressure` +
-    `&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_probability_max` +
-    `&windspeed_unit=mph` +
+    `&hourly=temperature_2m,precipitation_probability,weathercode` +
+    `&daily=temperature_2m_max,temperature_2m_min,weathercode` +
+    `&temperature_unit=${tempUnit}` +
     `&timezone=auto`;
 
+  const iconEl = document.getElementById("wx-app-icon");
+  const tempEl = document.getElementById("wx-app-temp");
+  const placeEl = document.getElementById("wx-app-place");
+  const metaEl = document.getElementById("wx-app-meta");
+  const hourlyBox = document.getElementById("wx-app-hourly");
+  const dailyBox = document.getElementById("wx-app-daily");
+
   try {
-    const res = await fetch(url);
-    const data = await res.json();
-    wxData = { ...data, locationName };
-    render();
+    const r = await fetch(url, { cache: "no-store" });
+    const j = await r.json();
+    const cw = j.current_weather;
+
+    // ---- HERO ----
+    if (cw && iconEl && tempEl && placeEl) {
+      iconEl.innerHTML = iconFromWeatherCode(
+        cw.weathercode,
+        cw.is_day,
+        "weather-anim-main"
+      );
+
+      tempEl.textContent =
+        Math.round(cw.temperature) + (tempUnit === "celsius" ? "°C" : "°F");
+
+      const label = labelHint || "Local weather";
+      placeEl.textContent = label;
+
+      if (metaEl) {
+        metaEl.textContent =
+          `Wind ${Math.round(cw.windspeed)} ` +
+          (j.current_weather_units?.windspeed || "km/h");
+      }
+
+      setSkyMood(cw.weathercode, cw.is_day);
+    }
+
+    // ---- HOURLY ----
+    if (j.hourly && j.hourly.time && hourlyBox) {
+      const now = Date.now();
+      const items = [];
+      for (let i = 0; i < j.hourly.time.length; i++) {
+        const t = new Date(j.hourly.time[i]).getTime();
+        if (t >= now && items.length < 12) {
+          items.push({
+            time: new Date(t).toLocaleTimeString([], { hour: "numeric" }),
+            temp: Math.round(j.hourly.temperature_2m[i]),
+            pop: j.hourly.precipitation_probability
+              ? j.hourly.precipitation_probability[i]
+              : null,
+            code: j.hourly.weathercode ? j.hourly.weathercode[i] : null,
+          });
+        }
+      }
+
+      hourlyBox.innerHTML = items
+        .map(
+          (it) => `
+          <div class="wx-hour-chip">
+            <div class="wx-hour-time">${it.time}</div>
+            <div>${iconFromWeatherCode(it.code, 1)}</div>
+            <div class="wx-hour-temp">${it.temp}${
+              tempUnit === "celsius" ? "°C" : "°F"
+            }</div>
+            <div class="wx-hour-pop">${it.pop ?? 0}% precip</div>
+          </div>`
+        )
+        .join("");
+    }
+
+    // ---- DAILY ----
+    if (j.daily && j.daily.time && dailyBox) {
+      const rows = j.daily.time
+        .slice(0, 5)
+        .map((d, idx) => {
+          const hi = Math.round(j.daily.temperature_2m_max[idx]);
+          const lo = Math.round(j.daily.temperature_2m_min[idx]);
+          const ic = iconFromWeatherCode(j.daily.weathercode[idx], 1);
+          const lbl = new Date(d).toLocaleDateString([], { weekday: "short" });
+
+          return `
+          <div class="wx-day-row">
+            <div class="wx-day-name">${lbl}</div>
+            <div>${ic}</div>
+            <div class="wx-day-temps">
+              <span class="max">${hi}°</span>
+              <span class="min">${lo}°</span>
+            </div>
+          </div>`;
+        })
+        .join("");
+
+      dailyBox.innerHTML = rows;
+    }
   } catch (err) {
-    console.error("Failed to fetch weather:", err);
-    els.location.textContent = "Error loading weather";
-    els.conditionText.textContent = "Check your connection";
+    console.error("Weather app error:", err);
+    if (placeEl) placeEl.textContent = "Weather unavailable";
   }
 }
 
-function setUnit(unit) {
-  if (unit === wxUnit) return;
-  wxUnit = unit;
-  els.unitF.classList.toggle("active", unit === "F");
-  els.unitC.classList.toggle("active", unit === "C");
-  els.unitF.setAttribute("aria-pressed", unit === "F");
-  els.unitC.setAttribute("aria-pressed", unit === "C");
-  render();
+/* ------------ INIT ------------ */
+
+function initWeatherApp() {
+  // Same ultimate fallback: Atlanta
+  const fallback = {
+    lat: 33.7490,
+    lon: -84.3880,
+    label: "Atlanta, GA",
+  };
+
+  const backBtn = document.getElementById("wx-app-back");
+  const uF = document.getElementById("uF");
+  const uC = document.getElementById("uC");
+  const placeEl = document.getElementById("wx-app-place");
+
+  let unit = "fahrenheit";
+  let last = { ...fallback };
+
+  const refresh = () =>
+    fetchWeatherApp(last.lat, last.lon, unit, last.label || undefined);
+
+  // Back button: go back if possible, otherwise go to index.html
+  if (backBtn) {
+    backBtn.addEventListener("click", () => {
+      if (window.history.length > 1) {
+        window.history.back();
+      } else {
+        window.location.href = "index.html";
+      }
+    });
+  }
+
+  // Unit toggles (app-local)
+  if (uF && uC) {
+    uF.addEventListener("click", () => {
+      unit = "fahrenheit";
+      uF.classList.add("active");
+      uC.classList.remove("active");
+      refresh();
+    });
+
+    uC.addEventListener("click", () => {
+      unit = "celsius";
+      uC.classList.add("active");
+      uF.classList.remove("active");
+      refresh();
+    });
+  }
+
+  // Resolve location: GPS → IP → Atlanta
+  if (placeEl) placeEl.textContent = "Locating…";
+  resolveLocationApp(fallback).then((loc) => {
+    last = loc || fallback;
+    refresh();
+  });
+
+  // Auto-refresh every 10 minutes
+  setInterval(refresh, 10 * 60 * 1000);
 }
 
-els.unitF.addEventListener("click", () => setUnit("F"));
-els.unitC.addEventListener("click", () => setUnit("C"));
-els.locate.addEventListener("click", () => loadWeather(true));
-
-loadWeather(true);
+document.addEventListener("DOMContentLoaded", initWeatherApp);
